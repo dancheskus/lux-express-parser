@@ -1,8 +1,8 @@
+const Promise = require('bluebird');
 const axios = require('axios');
 const moment = require('moment');
 
 const base_url = 'https://ticket.luxexpress.eu/ru';
-let dates = [];
 
 const oneDayCalculation = async date => {
   const { data: html } = await axios.get(
@@ -49,7 +49,8 @@ const oneDayCalculation = async date => {
   console.log(date);
 };
 
-const end_date = moment().add(43, 'd');
-for (let m = moment().add(19, 'd'); m.isBefore(end_date); m.add(1, 'd')) {
-  oneDayCalculation(m.format('MM-DD-YYYY'));
-}
+const end_date = moment().add(2, 'months');
+const dates = [];
+for (let m = moment(); m.isBefore(end_date); m.add(1, 'd')) dates.push(m.format('MM-DD-YYYY'));
+
+Promise.map(dates, date => oneDayCalculation(date), { concurrency: 1 });
