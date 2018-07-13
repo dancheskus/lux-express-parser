@@ -3,49 +3,61 @@ const axios = require('axios');
 const moment = require('moment');
 
 const base_url = 'https://ticket.luxexpress.eu/ru';
+const routesFromAllPages = [];
+const query = [{ Legs: [] }];
 
-const oneDayCalculation = async date => {
+/////////////////// Запросы на сервер //////////////////////////
+const concurrency = 8;
+const legsPerQuery = 130;
+
+const dataFromPageCollection = async date => {
   const { data: html } = await axios.get(
     `${base_url}/poezdku-raspisanija/riga-coach-station/vilnius-coach-station?Date=${date}&Currency=CURRENCY.EUR`
   );
-
-  const allRoutes = html.match(/TripId&(.*?)}/gi);
-  const allNumbers = allRoutes.map(route => route.match(/\d+/gi));
-
-  const query = [];
-
-  allNumbers.forEach(el => {
-    query.push({
-      Legs: [
-        {
-          TripId: el[0],
-          DepartureRouteStopId: el[1],
-          DestinationRouteStopId: el[2],
-        },
-      ],
-    });
+  const allRoutes = html.match(/TripId&(.*?)}/g);
+  allRoutes.forEach((route, i) => {
+    addingToRotesFromAllPagesArray(route.match(/\d+/g));
   });
+};
 
+const addingToRotesFromAllPagesArray = route => {
+  routesFromAllPages.push({
+    TripId: route[0],
+    DepartureRouteStopId: route[1],
+    DestinationRouteStopId: route[2],
+  });
+};
+
+const addingToQueryArray = async () => {
+  for (let i = 0; i < routesFromAllPages.length / legsPerQuery; i++) {
+    query[0].Legs = routesFromAllPages.slice(i * legsPerQuery, legsPerQuery * i + legsPerQuery);
+    await priceCalculation(query);
+    console.log(3);
+  }
+};
+
+const priceCalculation = async query => {
   const {
     data: { Trips },
   } = await axios.post(`${base_url}/TripBonusCalculator/CalculateSpecialPrice`, query);
 
   Trips.forEach(
-    el => (el.IsSpecialPrice ? console.log(`Date: ${date}. Price: ${el.Price}. TripID: ${el.TripId}`) : null)
+    el => (el.IsSpecialPrice ? console.log(`Date: {date}. Price: ${el.Price}. TripID: ${el.TripId}`) : null)
   );
-  // if (Trips[0].IsSpecialPrice) {
-  //   console.log(`Date: ${date}. Price: ${Trips[0].Price}. TripID: ${Trips[0].TripId}`);
-  // }
-
-  // console.log(Trips);
 };
 
-const start_date = moment();
-const end_date = moment().add(4, 'months');
+const start_date = moment().add(100, 'd');
+const end_date = moment().add(121, 'd');
 const dates = [];
-for (let m = start_date; m.isBefore(end_date); m.add(1, 'd')) dates.push(m.format('MM-DD-YYYY'));
+for (let m = start_date; m.diff(end_date, 'd') <= 0; m.add(1, 'd')) dates.push(m.format('MM-DD-YYYY'));
 
-Promise.map(dates, date => oneDayCalculation(date), { concurrency: 8 });
+Promise.map(dates, date => dataFromPageCollection(date), { concurrency }).then(() => {
+  // priceCalculation(query);
+  // console.log(JSON.stringify(query));
+  addingToQueryArray();
+  // console.log(routesFromAllPages);
+  // console.log(JSON.stringify(query));
+  // console.log(query[0].Legs.length);
+});
 
-// dates.forEach(date => oneDayCalculation(date));
-// oneDayCalculation('12-13-2018');
+// Решить проблему с несуществующими рейсами в конкретную дату
