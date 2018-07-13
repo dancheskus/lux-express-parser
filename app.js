@@ -9,48 +9,43 @@ const oneDayCalculation = async date => {
     `${base_url}/poezdku-raspisanija/riga-coach-station/vilnius-coach-station?Date=${date}&Currency=CURRENCY.EUR`
   );
 
-  const allRoutes = html.match(/Trip(.*)=Regular/gi);
+  const allRoutes = html.match(/TripId&(.*?)}/gi);
+  const allNumbers = allRoutes.map(route => route.match(/\d+/gi));
 
-  const routesWithoutChange = allRoutes.map(route => route.match(/\d{2,}/gi));
-  const routesWithChange = [];
-  routesWithoutChange.forEach((el, i) => {
-    if (el.length > 3) {
-      routesWithChange.push(el);
-      routesWithoutChange.splice(i, 1);
-    }
+  const query = [];
+
+  allNumbers.forEach(el => {
+    query.push({
+      Legs: [
+        {
+          TripId: el[0],
+          DepartureRouteStopId: el[1],
+          DestinationRouteStopId: el[2],
+        },
+      ],
+    });
   });
 
-  routesWithChange.forEach(el => {
-    for (let i = 0; i < el.length / 3; i++) {
-      routesWithoutChange.push([el[i * 3], el[i * 3 + 1], el[i * 3 + 2]]);
-    }
-  });
+  const {
+    data: { Trips },
+  } = await axios.post(`${base_url}/TripBonusCalculator/CalculateSpecialPrice`, query);
 
-  routesWithoutChange.forEach(async el => {
-    const json = [
-      {
-        Legs: [
-          {
-            TripId: el[0],
-            DepartureRouteStopId: el[1],
-            DestinationRouteStopId: el[2],
-          },
-        ],
-      },
-    ];
-    const {
-      data: { Trips },
-    } = await axios.post(`${base_url}/TripBonusCalculator/CalculateSpecialPrice`, json);
-    if (Trips[0].IsSpecialPrice) {
-      console.log(`Date: ${date}. Price: ${Trips[0].Price}. TripID: ${Trips[0].TripId}`);
-    }
-  });
+  Trips.forEach(
+    el => (el.IsSpecialPrice ? console.log(`Date: ${date}. Price: ${el.Price}. TripID: ${el.TripId}`) : null)
+  );
+  // if (Trips[0].IsSpecialPrice) {
+  //   console.log(`Date: ${date}. Price: ${Trips[0].Price}. TripID: ${Trips[0].TripId}`);
+  // }
 
-  console.log(date);
+  // console.log(Trips);
 };
 
-const end_date = moment().add(2, 'months');
+const start_date = moment();
+const end_date = moment().add(4, 'months');
 const dates = [];
-for (let m = moment(); m.isBefore(end_date); m.add(1, 'd')) dates.push(m.format('MM-DD-YYYY'));
+for (let m = start_date; m.isBefore(end_date); m.add(1, 'd')) dates.push(m.format('MM-DD-YYYY'));
 
-Promise.map(dates, date => oneDayCalculation(date), { concurrency: 1 });
+Promise.map(dates, date => oneDayCalculation(date), { concurrency: 8 });
+
+// dates.forEach(date => oneDayCalculation(date));
+// oneDayCalculation('12-13-2018');
