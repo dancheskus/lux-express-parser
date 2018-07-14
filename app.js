@@ -5,6 +5,7 @@ const moment = require('moment');
 const base_url = 'https://ticket.luxexpress.eu/ru';
 const routesFromAllPages = [];
 const query = [{ Legs: [] }];
+const allQueries = [];
 
 /////////////////// Запросы на сервер //////////////////////////
 const concurrency = 8;
@@ -30,9 +31,10 @@ const addingToRotesFromAllPagesArray = route => {
 
 const addingToQueryArray = async () => {
   for (let i = 0; i < routesFromAllPages.length / legsPerQuery; i++) {
-    query[0].Legs = routesFromAllPages.slice(i * legsPerQuery, legsPerQuery * i + legsPerQuery);
-    await priceCalculation(query);
-    console.log(3);
+    allQueries.push(routesFromAllPages.slice(i * legsPerQuery, legsPerQuery * i + legsPerQuery));
+    // query[0].Legs = routesFromAllPages.slice(i * legsPerQuery, legsPerQuery * i + legsPerQuery);
+    // await priceCalculation(query);
+    // console.log(3);
   }
 };
 
@@ -46,8 +48,8 @@ const priceCalculation = async query => {
   );
 };
 
-const start_date = moment().add(100, 'd');
-const end_date = moment().add(121, 'd');
+const start_date = moment().add(3, 'months');
+const end_date = moment().add(4, 'months');
 const dates = [];
 for (let m = start_date; m.diff(end_date, 'd') <= 0; m.add(1, 'd')) dates.push(m.format('MM-DD-YYYY'));
 
@@ -55,6 +57,15 @@ Promise.map(dates, date => dataFromPageCollection(date), { concurrency }).then((
   // priceCalculation(query);
   // console.log(JSON.stringify(query));
   addingToQueryArray();
+  Promise.map(
+    allQueries,
+    el => {
+      query[0].Legs = el;
+      return priceCalculation(query);
+    },
+    { concurrency }
+  );
+
   // console.log(routesFromAllPages);
   // console.log(JSON.stringify(query));
   // console.log(query[0].Legs.length);
