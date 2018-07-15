@@ -15,7 +15,7 @@ const start_date = moment();
 let end_date = moment().add(6, 'months');
 
 if (
-  // Ограничиваем 6 месяцами
+  // Ограничиваем 6ю месяцами
   end_date.format('MM-DD-YYYY') >=
   moment()
     .add(6, 'months')
@@ -26,11 +26,11 @@ if (
     .add(6, 'months')
     .subtract(3, 'd');
 
-console.log(end_date.format('MM-DD-YYYY'));
 
 /////////////////// Настройка направлений //////////////////////////
 const departure = 'riga-coach-station';
-const destination = 'vilnius-coach-station';
+const destination = 'minsk-central-coach-station';
+// const destination = 'vilnius-coach-station';
 
 const dataFromPageCollection = async date => {
   const { data: html } = await axios.get(`${base_url}/poezdku-raspisanija/${departure}/${destination}?Date=${date}`);
@@ -68,18 +68,18 @@ const priceCalculation = async query => {
 
 const dates = [];
 for (let m = start_date; m.diff(end_date, 'd') <= 0; m.add(1, 'd')) dates.push(m.format('MM-DD-YYYY'));
-// Promise.map(dates, date => dataFromPageCollection(date), { concurrency })
-//   .then(() => {
-//     addingToQueryArray();
-//     Promise.map(allQueries, query => priceCalculation(query), { concurrency }).catch(e =>
-//       console.log('Проблемы во втором промисе------------------------------', e)
-//     );
-//   })
-//   .catch(e => console.log('Проблемы в первом промисе------------------------------', e));
+Promise.map(dates, date => dataFromPageCollection(date), { concurrency })
+  .then(() => {
+    addingToQueryArray();
+    Promise.map(allQueries, query => priceCalculation(query), { concurrency }).catch(e =>
+      console.log('Проблемы во втором промисе------------------------------', e)
+    );
+  })
+  .catch(e => console.log('Проблемы в первом промисе------------------------------', e));
 
-// Решить проблему с несуществующими рейсами в конкретную дату
-// allQueries не глобальная переменная
-// Упростить regex
-// Научится определять сумму со всеми пересадками, и ограничивать по цене
-// Научится определять максимальное кол-во legs и concurrency, и умно их выставлять
-// https://ticket.luxexpress.eu/ru/Stops/FindBy?stopName=riga - Запрос остановки --> slug - элементы ссылки
+Решить проблему с несуществующими рейсами в конкретную дату
+allQueries не глобальная переменная
+Упростить regex
+Научится определять сумму со всеми пересадками, и ограничивать по цене
+Научится определять максимальное кол-во legs и concurrency, и умно их выставлять
+https://ticket.luxexpress.eu/ru/Stops/FindBy?stopName=riga - Запрос остановки --> slug - элементы ссылки
