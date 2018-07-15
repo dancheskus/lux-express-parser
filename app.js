@@ -26,7 +26,6 @@ if (
     .add(6, 'months')
     .subtract(3, 'd');
 
-
 /////////////////// Настройка направлений //////////////////////////
 const departure = 'riga-coach-station';
 const destination = 'minsk-central-coach-station';
@@ -77,9 +76,9 @@ Promise.map(dates, date => dataFromPageCollection(date), { concurrency })
   })
   .catch(e => console.log('Проблемы в первом промисе------------------------------', e));
 
-Решить проблему с несуществующими рейсами в конкретную дату
-allQueries не глобальная переменная
-Упростить regex
-Научится определять сумму со всеми пересадками, и ограничивать по цене
-Научится определять максимальное кол-во legs и concurrency, и умно их выставлять
-https://ticket.luxexpress.eu/ru/Stops/FindBy?stopName=riga - Запрос остановки --> slug - элементы ссылки
+// Решить проблему с несуществующими рейсами в конкретную дату
+// allQueries не глобальная переменная
+// Упростить regex
+// Научится определять сумму со всеми пересадками, и ограничивать по цене
+// Научится определять максимальное кол-во legs и concurrency, и умно их выставлять
+// https://ticket.luxexpress.eu/ru/Stops/FindBy?stopName=riga - Запрос остановки --> slug - элементы ссылки
