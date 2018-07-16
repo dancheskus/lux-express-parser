@@ -8,44 +8,40 @@ const allQueries = [];
 
 /////////////////// Запросы на сервер //////////////////////////
 const concurrency = 5;
-const legsPerQuery = 130;
+const legsPerQuery = 50;
 
 /////////////////// Настройка дат //////////////////////////
-const start_date = moment();
-let end_date = moment().add(6, 'months');
+const start_date = moment().add(1, 'd');
+let end_date = moment().add(6, 'M');
 
 if (
-  // Ограничиваем 6ю месяцами
-  end_date.format('MM-DD-YYYY') >=
+  // Ограничиваем 6-ю месяцами
+  end_date >=
   moment()
-    .add(6, 'months')
+    .add(6, 'M')
     .subtract(3, 'd')
-    .format('MM-DD-YYYY')
 )
   end_date = moment()
-    .add(6, 'months')
-    .subtract(3, 'd');
+    .add(6, 'M')
+    .subtract(4, 'd');
 
 /////////////////// Настройка направлений //////////////////////////
 const departure = 'riga-coach-station';
-const destination = 'minsk-central-coach-station';
-// const destination = 'vilnius-coach-station';
+// const destination = 'minsk-central-coach-station';
+const destination = 'vilnius-coach-station';
 
 const dataFromPageCollection = async date => {
   const { data: html } = await axios.get(`${base_url}/poezdku-raspisanija/${departure}/${destination}?Date=${date}`);
   const allRoutes = html.match(/TripId&(.*?)}/g);
   if (!allRoutes) return;
-  allRoutes.forEach(route => {
-    addingToRotesFromAllPagesArray(route.match(/\d+/g), date);
-  });
-};
-
-const addingToRotesFromAllPagesArray = (route, date) => {
-  routesFromAllPages.push({
-    TripId: route[0],
-    DepartureRouteStopId: route[1],
-    DestinationRouteStopId: route[2],
-    date,
+  allRoutes.forEach(el => {
+    const match = el.match(/\d+/g);
+    routesFromAllPages.push({
+      TripId: match[0],
+      DepartureRouteStopId: match[1],
+      DestinationRouteStopId: match[2],
+      date,
+    });
   });
 };
 
@@ -76,7 +72,6 @@ Promise.map(dates, date => dataFromPageCollection(date), { concurrency })
   })
   .catch(e => console.log('Проблемы в первом промисе------------------------------', e));
 
-// Решить проблему с несуществующими рейсами в конкретную дату
 // allQueries не глобальная переменная
 // Упростить regex
 // Научится определять сумму со всеми пересадками, и ограничивать по цене
