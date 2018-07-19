@@ -11,8 +11,8 @@ let concurrency = 5;
 let legsPerQuery = 50;
 
 /////////////////// Настройка дат //////////////////////////
-const start_date = moment().add(149, 'd');
-let end_date = moment().add(159, 'd');
+const start_date = moment();
+let end_date = moment().add(6, 'M');
 
 if (
   // Ограничиваем 6-ю месяцами
@@ -77,6 +77,7 @@ Promise.map(dates, date => dataFromPageCollection(date), { concurrency })
     addingToQueryArray(allQueries);
     Promise.map(allQueries, query => priceCalculation(query), { concurrency })
       .then(() => {
+        let selectedRoutes = [];
         allTrips.forEach(({ IsSpecialPrice, Price, date, totalChanges }, i) => {
           let totalPrice = Price;
           if (totalChanges > 0 && i < allTrips.length - 1) {
@@ -85,8 +86,19 @@ Promise.map(dates, date => dataFromPageCollection(date), { concurrency })
               totalPrice += allTrips[i + counter].Price;
             }
           }
-          IsSpecialPrice && totalPrice <= maxPricePerTrip ? console.log(`Date: ${date}. Price: ${totalPrice}.`) : null;
+          IsSpecialPrice && totalPrice <= maxPricePerTrip ? selectedRoutes.push({ date, totalPrice }) : null;
         });
+        selectedRoutes.sort((a, b) => {
+          const first = a.date.split('-');
+          const second = b.date.split('-');
+          if (first[2] > second[2]) return 1;
+          if (first[2] < second[2]) return -1;
+          if (first[0] > second[0]) return 1;
+          if (first[0] < second[0]) return -1;
+          if (first[1] > second[1]) return 1;
+          if (first[1] < second[1]) return -1;
+        });
+        console.log(selectedRoutes);
       })
       .catch(e => console.log('Проблемы во втором промисе------------------------------', e));
   })
