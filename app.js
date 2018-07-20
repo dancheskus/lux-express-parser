@@ -11,8 +11,8 @@ let concurrency = 5;
 let legsPerQuery = 50;
 
 /////////////////// Настройка дат //////////////////////////
-const start_date = moment();
-let end_date = moment().add(6, 'M');
+const start_date = moment().add(150, 'd');
+let end_date = moment().add(170, 'd');
 
 if (
   // Ограничиваем 6-ю месяцами
@@ -30,7 +30,7 @@ if (
 const departure = 'riga-coach-station';
 // const destination = 'minsk-central-coach-station';
 const destination = 'vilnius-coach-station';
-const maxPricePerTrip = 12;
+const maxPricePerTrip = 5;
 
 /////////////////// Парсинг HTML страницы //////////////////////////
 const dataFromPageCollection = async date => {
@@ -88,16 +88,7 @@ Promise.map(dates, date => dataFromPageCollection(date), { concurrency })
           }
           IsSpecialPrice && totalPrice <= maxPricePerTrip ? selectedRoutes.push({ date, totalPrice }) : null;
         });
-        selectedRoutes.sort((a, b) => {
-          const first = a.date.split('-');
-          const second = b.date.split('-');
-          if (first[2] > second[2]) return 1;
-          if (first[2] < second[2]) return -1;
-          if (first[0] > second[0]) return 1;
-          if (first[0] < second[0]) return -1;
-          if (first[1] > second[1]) return 1;
-          if (first[1] < second[1]) return -1;
-        });
+        selectedRoutes.sort((a, b) => moment(a.date, 'MM-DD-YYYY').diff(moment(b.date, 'MM-DD-YYYY')));
         console.log(selectedRoutes);
       })
       .catch(e => console.log('Проблемы во втором промисе------------------------------', e));
