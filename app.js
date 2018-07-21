@@ -7,12 +7,12 @@ const routesFromAllPages = [];
 const allTrips = [];
 
 /////////////////// Запросы на сервер //////////////////////////
-let concurrency = 5;
-let legsPerQuery = 50;
+const CONCURRENCY = 5;
+const LEGS_PER_QUERY = 50;
 
 /////////////////// Настройка дат //////////////////////////
 const start_date = moment().add(150, 'd');
-let end_date = moment().add(160, 'd');
+let end_date = moment().add(150, 'd');
 
 if (
   // Ограничиваем 6-ю месяцами
@@ -29,7 +29,7 @@ if (
 // const departure = 'kuressaare';
 const departure = 'vilnius-coach-station';
 const destination = 'riga-coach-station';
-const maxPricePerTrip = 5;
+const maxPricePerTrip = 12;
 const isReturning = true;
 
 /////////////////// Парсинг HTML страницы //////////////////////////
@@ -52,19 +52,18 @@ const dataFromPageCollection = async (date, dep, des) => {
   });
 };
 
-const addingToQueryArray = allQueries => {
-  const allLegs = routesFromAllPages.length;
-  for (let i = 0; i < allLegs / legsPerQuery; i++) {
-    allQueries.push(routesFromAllPages.slice(i * legsPerQuery, legsPerQuery * i + legsPerQuery));
-  }
+const splitLegsInChunks = () => {
+  const allQueries = [];
+  while (routesFromAllPages.length) allQueries.push(routesFromAllPages.splice(0, LEGS_PER_QUERY));
+  return allQueries;
 };
 
-const priceCalculation = async query => {
+const priceCalculation = async chunk => {
   const {
     data: { Trips },
-  } = await axios.post(`${base_url}/TripBonusCalculator/CalculateSpecialPrice`, [{ Legs: query }]);
+  } = await axios.post(`${base_url}/TripBonusCalculator/CalculateSpecialPrice`, [{ Legs: chunk }]);
   Trips.forEach((el, i) => {
-    const { totalChanges, date, TripId, DepartureRouteStopId, DestinationRouteStopId } = query[i];
+    const { totalChanges, date, TripId, DepartureRouteStopId, DestinationRouteStopId } = chunk[i];
     allTrips.push({ ...el, totalChanges, date, TripId, DepartureRouteStopId, DestinationRouteStopId });
   });
 };
@@ -72,12 +71,11 @@ const priceCalculation = async query => {
 const dates = [];
 for (let m = start_date; m.diff(end_date) <= 0; m.add(1, 'd')) dates.push(m.format('MM-DD-YYYY'));
 const searchTickets = async (dep, des) => {
-  await Promise.map(dates, date => dataFromPageCollection(date, dep, des), { concurrency }).catch(e =>
+  await Promise.map(dates, date => dataFromPageCollection(date, dep, des), { CONCURRENCY }).catch(e =>
     console.log('Проблемы в первом промисе------------------------------', e)
   );
-  const allQueries = [];
-  addingToQueryArray(allQueries);
-  await Promise.map(allQueries, query => priceCalculation(query), { concurrency }).catch(e =>
+
+  await Promise.map(splitLegsInChunks(), chunk => priceCalculation(chunk), { CONCURRENCY }).catch(e =>
     console.log('Проблемы во втором промисе------------------------------', e)
   );
   let selectedRoutes = [];
@@ -85,17 +83,15 @@ const searchTickets = async (dep, des) => {
     ({ IsSpecialPrice, Price, date, totalChanges, TripId, DepartureRouteStopId, DestinationRouteStopId }, i) => {
       let totalPrice = Price;
       if (totalChanges > 0 && i < allTrips.length - 1) {
-        totalPrice = 0;
-        for (let counter = 0; counter < totalChanges + 1; counter++) {
-          totalPrice += allTrips[i + counter].Price;
+        for (let change = 1; change <= totalChanges; change++) {
+          totalPrice += allTrips[i + change].Price;
         }
-        for (let counter = 1; counter < totalChanges + 1; counter++) {
-          allTrips[i + counter].Price = totalPrice;
+        for (let change = 1; change <= totalChanges; change++) {
+          allTrips[i + change].Price = totalPrice;
         }
       }
-      IsSpecialPrice && totalPrice <= maxPricePerTrip
-        ? selectedRoutes.push({ date, totalPrice, TripId, DepartureRouteStopId, DestinationRouteStopId })
-        : null;
+      if (!IsSpecialPrice || totalPrice > maxPricePerTrip) return;
+      selectedRoutes.push({ date, totalPrice, TripId, DepartureRouteStopId, DestinationRouteStopId });
     }
   );
   selectedRoutes.sort((a, b) => moment(a.date, 'MM-DD-YYYY').diff(moment(b.date, 'MM-DD-YYYY')));
@@ -112,5 +108,5 @@ const startApp = async () => {
 };
 startApp();
 
-// Научится определять максимальное кол-во legs и concurrency, и умно их выставлять
+// Научится определять максимальное кол-во legs и CONCURRENCY, и умно их выставлять
 // https://ticket.luxexpress.eu/ru/Stops/FindBy?stopName=riga - Запрос остановки --> slug - элементы ссылки
