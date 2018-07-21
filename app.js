@@ -7,8 +7,8 @@ const routesFromAllPages = [];
 const allTrips = [];
 
 /////////////////// Запросы на сервер //////////////////////////
-const CONCURRENCY = 5;
-const LEGS_PER_QUERY = 50;
+let concurrency = 5;
+let LEGS_PER_QUERY = 50;
 
 /////////////////// Настройка дат //////////////////////////
 const start_date = moment().add(150, 'd');
@@ -71,11 +71,11 @@ const priceCalculation = async chunk => {
 const dates = [];
 for (let m = start_date; m.diff(end_date) <= 0; m.add(1, 'd')) dates.push(m.format('MM-DD-YYYY'));
 const searchTickets = async (dep, des) => {
-  await Promise.map(dates, date => dataFromPageCollection(date, dep, des), { CONCURRENCY }).catch(e =>
+  await Promise.map(dates, date => dataFromPageCollection(date, dep, des), { concurrency }).catch(e =>
     console.log('Проблемы в первом промисе------------------------------', e)
   );
 
-  await Promise.map(splitLegsInChunks(), chunk => priceCalculation(chunk), { CONCURRENCY }).catch(e =>
+  await Promise.map(splitLegsInChunks(), chunk => priceCalculation(chunk), { concurrency }).catch(e =>
     console.log('Проблемы во втором промисе------------------------------', e)
   );
   let selectedRoutes = [];
@@ -108,5 +108,5 @@ const startApp = async () => {
 };
 startApp();
 
-// Научится определять максимальное кол-во legs и CONCURRENCY, и умно их выставлять
+// Научится определять максимальное кол-во legs и concurrency, и умно их выставлять
 // https://ticket.luxexpress.eu/ru/Stops/FindBy?stopName=riga - Запрос остановки --> slug - элементы ссылки
