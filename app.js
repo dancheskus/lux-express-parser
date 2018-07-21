@@ -12,7 +12,7 @@ let legsPerQuery = 50;
 
 /////////////////// Настройка дат //////////////////////////
 const start_date = moment().add(150, 'd');
-let end_date = moment().add(150, 'd');
+let end_date = moment().add(160, 'd');
 
 if (
   // Ограничиваем 6-ю месяцами
@@ -30,7 +30,7 @@ if (
 const departure = 'vilnius-coach-station';
 const destination = 'riga-coach-station';
 const maxPricePerTrip = 5;
-const isReturning = false;
+const isReturning = true;
 
 /////////////////// Парсинг HTML страницы //////////////////////////
 const dataFromPageCollection = async (date, dep, des) => {
@@ -71,40 +71,35 @@ const priceCalculation = async query => {
 
 const dates = [];
 for (let m = start_date; m.diff(end_date) <= 0; m.add(1, 'd')) dates.push(m.format('MM-DD-YYYY'));
-const searchTickets = (dep, des) => {
-  return Promise.map(dates, date => dataFromPageCollection(date, dep, des), { concurrency })
-    .then(() => {
-      const allQueries = [];
-      addingToQueryArray(allQueries);
-      return Promise.map(allQueries, query => priceCalculation(query), { concurrency })
-        .then(() => {
-          let selectedRoutes = [];
-          allTrips.forEach(
-            (
-              { IsSpecialPrice, Price, date, totalChanges, TripId, DepartureRouteStopId, DestinationRouteStopId },
-              i
-            ) => {
-              let totalPrice = Price;
-              if (totalChanges > 0 && i < allTrips.length - 1) {
-                totalPrice = 0;
-                for (let counter = 0; counter < totalChanges + 1; counter++) {
-                  totalPrice += allTrips[i + counter].Price;
-                }
-                for (let counter = 1; counter < totalChanges + 1; counter++) {
-                  allTrips[i + counter].Price = totalPrice;
-                }
-              }
-              IsSpecialPrice && totalPrice <= maxPricePerTrip
-                ? selectedRoutes.push({ date, totalPrice, TripId, DepartureRouteStopId, DestinationRouteStopId })
-                : null;
-            }
-          );
-          selectedRoutes.sort((a, b) => moment(a.date, 'MM-DD-YYYY').diff(moment(b.date, 'MM-DD-YYYY')));
-          return selectedRoutes;
-        })
-        .catch(e => console.log('Проблемы во втором промисе------------------------------', e));
-    })
-    .catch(e => console.log('Проблемы в первом промисе------------------------------', e));
+const searchTickets = async (dep, des) => {
+  await Promise.map(dates, date => dataFromPageCollection(date, dep, des), { concurrency }).catch(e =>
+    console.log('Проблемы в первом промисе------------------------------', e)
+  );
+  const allQueries = [];
+  addingToQueryArray(allQueries);
+  await Promise.map(allQueries, query => priceCalculation(query), { concurrency }).catch(e =>
+    console.log('Проблемы во втором промисе------------------------------', e)
+  );
+  let selectedRoutes = [];
+  allTrips.forEach(
+    ({ IsSpecialPrice, Price, date, totalChanges, TripId, DepartureRouteStopId, DestinationRouteStopId }, i) => {
+      let totalPrice = Price;
+      if (totalChanges > 0 && i < allTrips.length - 1) {
+        totalPrice = 0;
+        for (let counter = 0; counter < totalChanges + 1; counter++) {
+          totalPrice += allTrips[i + counter].Price;
+        }
+        for (let counter = 1; counter < totalChanges + 1; counter++) {
+          allTrips[i + counter].Price = totalPrice;
+        }
+      }
+      IsSpecialPrice && totalPrice <= maxPricePerTrip
+        ? selectedRoutes.push({ date, totalPrice, TripId, DepartureRouteStopId, DestinationRouteStopId })
+        : null;
+    }
+  );
+  selectedRoutes.sort((a, b) => moment(a.date, 'MM-DD-YYYY').diff(moment(b.date, 'MM-DD-YYYY')));
+  return selectedRoutes;
 };
 const startApp = async () => {
   const aToB = await searchTickets(departure, destination);
