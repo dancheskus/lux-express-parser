@@ -26,9 +26,12 @@ const destination = 'riga-coach-station';
 const maxPricePerTrip = 12;
 const isReturning = false;
 
+/////////////////// Расчет дат //////////////////////////
+const dates = [];
+for (let m = start_date; m.diff(end_date) <= 0; m.add(1, 'd')) dates.push(m.format('MM-DD-YYYY'));
+
 module.exports = {
-  start_date,
-  end_date,
+  dates,
   concurrency,
   LEGS_PER_QUERY,
   departure,
