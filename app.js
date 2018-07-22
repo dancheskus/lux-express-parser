@@ -3,11 +3,10 @@ const axios = require('axios');
 const moment = require('moment');
 
 const base_url = 'https://ticket.luxexpress.eu/ru';
-const allTrips = [];
 
 /////////////////// Запросы на сервер //////////////////////////
 let concurrency = 5;
-let LEGS_PER_QUERY = 50;
+let LEGS_PER_QUERY = 5;
 
 /////////////////// Настройка дат //////////////////////////
 const start_date = moment().add(150, 'd');
@@ -62,10 +61,21 @@ const splitLegsInChunks = routesFromAllPages => {
 const priceCalculation = async chunk => {
   const {
     data: { Trips },
-  } = await axios.post(`${base_url}/TripBonusCalculator/CalculateSpecialPrice`, [{ Legs: chunk }]);
-  Trips.forEach((el, i) => {
+  } = await axios.post(`${base_url}/TripBonusCalculator/CalculateSpecialPrice`, [
+    {
+      Legs: chunk,
+    },
+  ]);
+  return Trips.map((trip, i) => {
     const { totalChanges, date, TripId, DepartureRouteStopId, DestinationRouteStopId } = chunk[i];
-    allTrips.push({ ...el, totalChanges, date, TripId, DepartureRouteStopId, DestinationRouteStopId });
+    return {
+      ...trip,
+      totalChanges,
+      date,
+      TripId,
+      DepartureRouteStopId,
+      DestinationRouteStopId,
+    };
   });
 };
 
@@ -81,10 +91,16 @@ const searchTickets = async (dep, des) => {
     {
       concurrency,
     }
-  ).catch(e => console.log('Проблемы в первом промисе------------------------------')); //, e));
-
-  await Promise.map(splitLegsInChunks(routesFromAllPages), chunk => priceCalculation(chunk), { concurrency }).catch(
-    e => console.log('Проблемы во втором промисе------------------------------') //, e)
+  ).catch(e => console.log('Проблемы в первом промисе------------------------------', e)); //));
+  const allTrips = [];
+  await Promise.map(
+    splitLegsInChunks(routesFromAllPages),
+    async chunk => allTrips.push(...(await priceCalculation(chunk))),
+    {
+      concurrency,
+    }
+  ).catch(
+    e => console.log('Проблемы во втором промисе------------------------------', e) //)
   );
   let selectedRoutes = [];
   allTrips.forEach(
@@ -99,7 +115,13 @@ const searchTickets = async (dep, des) => {
         }
       }
       if (!IsSpecialPrice || totalPrice > maxPricePerTrip) return;
-      selectedRoutes.push({ date, totalPrice, TripId, DepartureRouteStopId, DestinationRouteStopId });
+      selectedRoutes.push({
+        date,
+        totalPrice,
+        TripId,
+        DepartureRouteStopId,
+        DestinationRouteStopId,
+      });
     }
   );
   selectedRoutes.sort((a, b) => moment(a.date, 'MM-DD-YYYY').diff(moment(b.date, 'MM-DD-YYYY')));
@@ -109,7 +131,6 @@ const startApp = async () => {
   const aToB = await searchTickets(departure, destination);
   console.log(aToB);
   if (!isReturning) return;
-  allTrips.length = 0;
   const bToA = await searchTickets(destination, departure);
   console.log(bToA);
 };
