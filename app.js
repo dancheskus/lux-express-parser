@@ -3,7 +3,6 @@ const axios = require('axios');
 const moment = require('moment');
 
 const base_url = 'https://ticket.luxexpress.eu/ru';
-const routesFromAllPages = [];
 const allTrips = [];
 
 /////////////////// Запросы на сервер //////////////////////////
@@ -30,18 +29,19 @@ if (
 const departure = 'vilnius-coach-station';
 const destination = 'riga-coach-station';
 const maxPricePerTrip = 12;
-const isReturning = true;
+const isReturning = false;
 
 /////////////////// Парсинг HTML страницы //////////////////////////
 const dataFromPageCollection = async (date, dep, des) => {
+  const routesFromCurrentPage = [];
   const { data: html } = await axios.get(`${base_url}/poezdku-raspisanija/${dep}/${des}?Date=${date}`);
   const allRoutes = html.match(/\[{(.*?)\]/g);
-  if (!allRoutes) return;
+  if (!allRoutes) return [];
   allRoutes.forEach(el => {
     const individualRoute = el.match(/TripId&(.*?)}/g);
     individualRoute.forEach((el, i) => {
       const [TripId, DepartureRouteStopId, DestinationRouteStopId] = el.match(/\d+/g);
-      routesFromAllPages.push({
+      routesFromCurrentPage.push({
         TripId,
         DepartureRouteStopId,
         DestinationRouteStopId,
@@ -50,9 +50,10 @@ const dataFromPageCollection = async (date, dep, des) => {
       });
     });
   });
+  return routesFromCurrentPage;
 };
 
-const splitLegsInChunks = () => {
+const splitLegsInChunks = routesFromAllPages => {
   const allQueries = [];
   while (routesFromAllPages.length) allQueries.push(routesFromAllPages.splice(0, LEGS_PER_QUERY));
   return allQueries;
@@ -71,12 +72,19 @@ const priceCalculation = async chunk => {
 const dates = [];
 for (let m = start_date; m.diff(end_date) <= 0; m.add(1, 'd')) dates.push(m.format('MM-DD-YYYY'));
 const searchTickets = async (dep, des) => {
-  await Promise.map(dates, date => dataFromPageCollection(date, dep, des), { concurrency }).catch(e =>
-    console.log('Проблемы в первом промисе------------------------------', e)
-  );
+  const routesFromAllPages = [];
+  await Promise.map(
+    dates,
+    async date => {
+      routesFromAllPages.push(...(await dataFromPageCollection(date, dep, des)));
+    },
+    {
+      concurrency,
+    }
+  ).catch(e => console.log('Проблемы в первом промисе------------------------------')); //, e));
 
-  await Promise.map(splitLegsInChunks(), chunk => priceCalculation(chunk), { concurrency }).catch(e =>
-    console.log('Проблемы во втором промисе------------------------------', e)
+  await Promise.map(splitLegsInChunks(routesFromAllPages), chunk => priceCalculation(chunk), { concurrency }).catch(
+    e => console.log('Проблемы во втором промисе------------------------------') //, e)
   );
   let selectedRoutes = [];
   allTrips.forEach(
@@ -101,7 +109,6 @@ const startApp = async () => {
   const aToB = await searchTickets(departure, destination);
   console.log(aToB);
   if (!isReturning) return;
-  routesFromAllPages.length = 0;
   allTrips.length = 0;
   const bToA = await searchTickets(destination, departure);
   console.log(bToA);
