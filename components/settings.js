@@ -1,12 +1,12 @@
 const moment = require('moment');
 
 /////////////////// Запросы на сервер //////////////////////////
-let concurrency = 5;
-let LEGS_PER_QUERY = 5;
+let concurrency = 3;
+let LEGS_PER_QUERY = 50;
 
 /////////////////// Настройка дат //////////////////////////
-const start_date = moment().add(150, 'd');
-let end_date = moment().add(150, 'd');
+const start_date = moment().add(0, 'd');
+let end_date = moment().add(6, 'M');
 
 if (
   // Ограничиваем 6-ю месяцами
@@ -20,11 +20,14 @@ if (
     .subtract(4, 'd');
 
 /////////////////// Настройка поиска //////////////////////////
-// const departure = 'kuressaare';
 const departure = 'vilnius-coach-station';
 const destination = 'riga-coach-station';
-const maxPricePerTrip = 12;
-const isReturning = false;
+const maxPricePerTrip = 5;
+const isReturning = true;
+const returningDayRange = {
+  min: 3,
+  max: 4,
+};
 
 /////////////////// Расчет дат //////////////////////////
 const dates = [];
@@ -38,4 +41,5 @@ module.exports = {
   destination,
   maxPricePerTrip,
   isReturning,
+  returningDayRange,
 };
