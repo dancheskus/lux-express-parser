@@ -5,8 +5,8 @@ let concurrency = 3;
 let LEGS_PER_QUERY = 50;
 
 /////////////////// Настройка дат //////////////////////////
-const start_date = moment().add(0, 'd');
-let end_date = moment().add(6, 'M');
+const start_date = moment().add(90, 'd');
+let end_date = moment().add(120, 'd');
 
 if (
   // Ограничиваем 6-ю месяцами
@@ -26,7 +26,7 @@ const maxPricePerTrip = 5;
 const isReturning = true;
 const returningDayRange = {
   min: 3,
-  max: 4,
+  max: 6,
 };
 
 /////////////////// Расчет дат //////////////////////////
