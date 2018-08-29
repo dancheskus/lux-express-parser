@@ -1,3 +1,9 @@
+const app = require('express')();
+const bodyParser = require('body-parser');
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+const port = 3000;
+
 const moment = require('moment');
 
 const { departure, destination, isReturning, returningDayRange } = require('./components/settings.js');
@@ -25,7 +31,7 @@ const startApp = async () => {
     }
   });
 };
-startApp();
+// startApp();
 
 const findFirstReturnDateIndex = (arr, value) => {
   let high = arr.length - 1;
@@ -44,6 +50,12 @@ const findFirstReturnDateIndex = (arr, value) => {
   }
   return -1;
 };
+
+app.get('/', (req, res) => {
+  res.json({ response: 'Hello World' });
+});
+
+app.listen(port, () => console.log(`Server is working on port ${port}`));
 
 // Если в range указана одна дата, то она должна быть фиксированной
 // Переодически при рабочем коде вылетают ошибки сервера
