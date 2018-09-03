@@ -3,7 +3,7 @@ const app = require('express')();
 const bodyParser = require('body-parser');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-const port = 3000;
+const port = 5000;
 
 const { creatingDatesArray } = require('./components/settings.js');
 
