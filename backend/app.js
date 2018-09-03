@@ -1,19 +1,15 @@
-const app = require('express')();
-const bodyParser = require('body-parser');
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
-const port = 3000;
-
 const moment = require('moment');
 
-const { departure, destination, isReturning, returningDayRange } = require('./components/settings.js');
+// const { isReturning, returningDayRange } = require('./components/settings.js');
 
 const searchTickets = require('./components/searchTickets');
 
-const startApp = async () => {
-  const aToB = await searchTickets(departure, destination);
+const startApp = async (dep, des, dates, isReturning, returningDayRange, maxPricePerTrip) => {
+  const aToB = await searchTickets(dep, des, dates, maxPricePerTrip);
   if (!isReturning) return;
-  const bToA = await searchTickets(destination, departure);
+  const bToA = await searchTickets(des, dep, dates, maxPricePerTrip);
+
+  const result = [];
 
   aToB.forEach(aToBtrip => {
     const firstDate = moment(aToBtrip.date, 'MM-DD-YYYY');
@@ -27,11 +23,12 @@ const startApp = async () => {
       bToA[i] && lastReturnDate.diff(moment(bToA[i].date, 'MM-DD-YYYY'), 'd') > 0;
       i++
     ) {
-      console.log(`atob: ${firstDate} btoa: ${bToA[i].date}`);
+      result.push(`atob: ${firstDate.format('MM-DD-YYYY')} btoa: ${bToA[i].date}`);
     }
   });
+
+  return result;
 };
-// startApp();
 
 const findFirstReturnDateIndex = (arr, value) => {
   let high = arr.length - 1;
@@ -51,11 +48,7 @@ const findFirstReturnDateIndex = (arr, value) => {
   return -1;
 };
 
-app.get('/', (req, res) => {
-  res.json({ response: 'Hello World' });
-});
-
-app.listen(port, () => console.log(`Server is working on port ${port}`));
+module.exports = startApp;
 
 // Если в range указана одна дата, то она должна быть фиксированной
 // Переодически при рабочем коде вылетают ошибки сервера

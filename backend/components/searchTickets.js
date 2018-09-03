@@ -1,7 +1,7 @@
 const Promise = require('bluebird');
 const moment = require('moment');
 
-const { LEGS_PER_QUERY, dates, concurrency, maxPricePerTrip } = require('./settings.js');
+const { LEGS_PER_QUERY, concurrency } = require('./settings.js');
 
 const { dataFromPageCollection, priceCalculation } = require('./lux-express-server');
 
@@ -11,7 +11,7 @@ const splitLegsInChunks = routesFromAllPages => {
   return allQueries;
 };
 
-const searchTickets = async (dep, des) => {
+const searchTickets = async (dep, des, dates, maxPricePerTrip) => {
   const routesFromAllPages = [];
   await Promise.map(
     dates,
