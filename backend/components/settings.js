@@ -26,23 +26,8 @@ const creatingDatesArray = (startDate, endDate) => {
   return dates;
 };
 
-/////////////////// Настройка поиска //////////////////////////
-let departure = 'vilnius-coach-station';
-let destination = 'riga-coach-station';
-let maxPricePerTrip = 5;
-let isReturning = true;
-let returningDayRange = {
-  min: 3,
-  max: 6,
-};
-
 module.exports = {
   creatingDatesArray,
   concurrency,
   LEGS_PER_QUERY,
-  departure,
-  destination,
-  maxPricePerTrip,
-  isReturning,
-  returningDayRange,
 };
