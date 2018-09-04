@@ -9,14 +9,14 @@ const override = css`
 `;
 
 export default class AwesomeComponent extends React.Component {
-  state = {
-    loading: true,
-  };
+  // state = {
+  //   loading: true,
+  // };
 
   render() {
     return (
       <div className="sweet-loading">
-        <BounceLoader className={override} sizeUnit={'px'} size={50} color={'#123abc'} loading={this.state.loading} />
+        <BounceLoader className={override} sizeUnit={'px'} size={20} color={'#123abc'} loading={this.props.loading} />
       </div>
     );
   }

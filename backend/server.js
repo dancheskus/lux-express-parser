@@ -1,8 +1,9 @@
-const moment = require('moment');
+const cors = require('cors');
 const app = require('express')();
 const bodyParser = require('body-parser');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(cors());
 const port = 5000;
 
 const { creatingDatesArray } = require('./components/settings.js');

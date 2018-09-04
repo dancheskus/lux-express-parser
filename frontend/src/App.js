@@ -12,6 +12,7 @@ class App extends Component {
     end_date: '11.10.2018',
     returningDayRangeMin: 1,
     returningDayRangeMax: 6,
+    loading: false,
   };
   handleChange = e => {
     this.setState({ [e.target.name]: e.target.value });
@@ -19,7 +20,7 @@ class App extends Component {
 
   handleSubmit = e => {
     e.preventDefault();
-
+    this.setState({ loading: true });
     axios
       .post('http://localhost:5000/findtickets', {
         departure: this.state.departure,
@@ -35,9 +36,11 @@ class App extends Component {
       })
       .then(res => {
         console.log(res.data);
+        this.setState({ loading: false });
       })
       .catch(err => {
         console.log(err);
+        this.setState({ loading: false });
       });
   };
 
@@ -154,7 +157,7 @@ class App extends Component {
             <div>
               <button type="submit">
                 Submit
-                <Loader />
+                <Loader loading={this.state.loading} />
               </button>
             </div>
           </form>
