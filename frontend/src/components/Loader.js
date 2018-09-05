@@ -9,10 +9,6 @@ const override = css`
 `;
 
 export default class AwesomeComponent extends React.Component {
-  // state = {
-  //   loading: true,
-  // };
-
   render() {
     return (
       <div className="sweet-loading">

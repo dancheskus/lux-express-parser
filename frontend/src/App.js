@@ -1,7 +1,11 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import Loader from './components/Loader';
+import moment from 'moment';
+import 'react-dates/initialize';
+import 'react-dates/lib/css/_datepicker.css';
 
+import DatePicker from './components/DatePicker';
 class App extends Component {
   state = {
     departure: 'vilnius-coach-station',
@@ -14,6 +18,14 @@ class App extends Component {
     returningDayRangeMax: 6,
     loading: false,
   };
+
+  dateChange = (startDate, endDate) => {
+    this.setState({
+      start_date: moment(startDate).format('DD.MM.YYYY'),
+      end_date: moment(endDate).format('DD.MM.YYYY'),
+    });
+  };
+
   handleChange = e => {
     this.setState({ [e.target.name]: e.target.value });
   };
@@ -53,6 +65,7 @@ class App extends Component {
       <div className="App">
         <header className="App-header">
           <h1 className="App-title">LuxExpress</h1>
+          <DatePicker onDateChange={this.dateChange} />
           <form onSubmit={this.handleSubmit}>
             <div>
               <label>
@@ -95,7 +108,7 @@ class App extends Component {
 
             <div>
               <label>
-                Returning?
+                Return?
                 <input
                   name="isReturning"
                   type="checkbox"
@@ -106,33 +119,7 @@ class App extends Component {
             </div>
 
             <div>
-              <label>
-                Start date:
-                <input
-                  placeholder="Date"
-                  name="start_date"
-                  type="text"
-                  value={this.state.start_date}
-                  onChange={this.handleChange}
-                />
-              </label>
-            </div>
-
-            <div>
-              <label>
-                End date:
-                <input
-                  placeholder="Date"
-                  name="end_date"
-                  type="text"
-                  value={this.state.end_date}
-                  onChange={this.handleChange}
-                />
-              </label>
-            </div>
-
-            <div>
-              <div> Returning day range</div>
+              <div> Return day range</div>
               <label>
                 From:
                 <input
@@ -140,6 +127,7 @@ class App extends Component {
                   type="text"
                   value={this.state.returningDayRangeMin}
                   onChange={this.handleChange}
+                  disabled={!this.state.isReturning}
                 />
               </label>
 
@@ -150,12 +138,13 @@ class App extends Component {
                   type="text"
                   value={this.state.returningDayRangeMax}
                   onChange={this.handleChange}
+                  disabled={!this.state.isReturning}
                 />
               </label>
             </div>
 
             <div>
-              <button type="submit">
+              <button type="submit" disabled={this.state.loading}>
                 Submit
                 <Loader loading={this.state.loading} />
               </button>
