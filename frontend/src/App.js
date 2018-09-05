@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import Loader from './components/Loader';
-import Slider from './components/Slider';
+import { SliderRangeLine, SliderLine } from './components/Slider';
 import moment from 'moment';
 import 'react-dates/initialize';
 import 'react-dates/lib/css/_datepicker.css';
@@ -20,13 +20,13 @@ class App extends Component {
     loading: false,
   };
 
-  dateChange = (startDate, endDate) => {
+  dateChange = (startDate, endDate) =>
     this.setState({
       start_date: moment(startDate).format('DD.MM.YYYY'),
       end_date: moment(endDate).format('DD.MM.YYYY'),
     });
-  };
 
+  maxPricePerTripChange = price => this.setState({ maxPricePerTrip: price });
   handleChange = e => {
     this.setState({ [e.target.name]: e.target.value });
   };
@@ -62,7 +62,6 @@ class App extends Component {
   };
 
   onSliderChange = value => {
-    console.log(value);
     this.setState({ returningDayRangeMin: value[0], returningDayRangeMax: value[1] });
   };
 
@@ -100,18 +99,10 @@ class App extends Component {
               </label>
             </div>
 
-            <div>
-              <label>
-                Maximium price per trip:
-                <input
-                  placeholder="Price"
-                  name="maxPricePerTrip"
-                  type="text"
-                  value={this.state.maxPricePerTrip}
-                  onChange={this.handleChange}
-                />
-              </label>
-            </div>
+            <SliderLine
+              maxPricePerTrip={this.state.maxPricePerTrip}
+              maxPricePerTripChange={this.maxPricePerTripChange}
+            />
 
             <div>
               <label>
@@ -125,12 +116,12 @@ class App extends Component {
               </label>
             </div>
 
-            <Slider
-            isReturning={this.state.isReturning}
-            onSliderChange={this.onSliderChange}
-            returningDayRangeMin={this.state.returningDayRangeMin}
-            returningDayRangeMax={this.state.returningDayRangeMax}
-          />
+            <SliderRangeLine
+              isReturning={this.state.isReturning}
+              onSliderChange={this.onSliderChange}
+              returningDayRangeMin={this.state.returningDayRangeMin}
+              returningDayRangeMax={this.state.returningDayRangeMax}
+            />
 
             <div>
               <button type="submit" disabled={this.state.loading}>
