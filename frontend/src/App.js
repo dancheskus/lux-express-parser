@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import Loader from './components/Loader';
+import Slider from './components/Slider';
 import moment from 'moment';
 import 'react-dates/initialize';
 import 'react-dates/lib/css/_datepicker.css';
@@ -14,8 +15,8 @@ class App extends Component {
     isReturning: true,
     start_date: '01.10.2018',
     end_date: '11.10.2018',
-    returningDayRangeMin: 1,
-    returningDayRangeMax: 6,
+    returningDayRangeMin: 2,
+    returningDayRangeMax: 4,
     loading: false,
   };
 
@@ -60,11 +61,17 @@ class App extends Component {
     this.setState({ isReturning: !this.state.isReturning });
   };
 
+  onSliderChange = value => {
+    console.log(value);
+    this.setState({ returningDayRangeMin: value[0], returningDayRangeMax: value[1] });
+  };
+
   render() {
     return (
       <div className="App">
         <header className="App-header">
           <h1 className="App-title">LuxExpress</h1>
+
           <DatePicker onDateChange={this.dateChange} />
           <form onSubmit={this.handleSubmit}>
             <div>
@@ -118,30 +125,12 @@ class App extends Component {
               </label>
             </div>
 
-            <div>
-              <div> Return day range</div>
-              <label>
-                From:
-                <input
-                  name="returningDayRangeMin"
-                  type="text"
-                  value={this.state.returningDayRangeMin}
-                  onChange={this.handleChange}
-                  disabled={!this.state.isReturning}
-                />
-              </label>
-
-              <label>
-                destination:
-                <input
-                  name="returningDayRangeMax"
-                  type="text"
-                  value={this.state.returningDayRangeMax}
-                  onChange={this.handleChange}
-                  disabled={!this.state.isReturning}
-                />
-              </label>
-            </div>
+            <Slider
+            isReturning={this.state.isReturning}
+            onSliderChange={this.onSliderChange}
+            returningDayRangeMin={this.state.returningDayRangeMin}
+            returningDayRangeMax={this.state.returningDayRangeMax}
+          />
 
             <div>
               <button type="submit" disabled={this.state.loading}>

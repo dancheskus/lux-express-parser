@@ -11,14 +11,11 @@ const creatingDatesArray = (startDate, endDate) => {
 
   if (
     // Ограничиваем 6-ю месяцами
-    end_date >=
-    moment()
-      .add(6, 'M')
-      .subtract(3, 'd')
+    end_date >= moment().add(6, 'M')
+    // .subtract(3, 'd')
   )
-    end_date = moment()
-      .add(6, 'M')
-      .subtract(4, 'd');
+    end_date = moment().add(6, 'M');
+  // .subtract(4, 'd');
 
   /////////////////// Расчет дат //////////////////////////
   const dates = [];

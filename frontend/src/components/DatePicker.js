@@ -29,6 +29,7 @@ export default class DatePicker extends React.Component {
           displayFormat={'DD.MM.YYYY'}
           startDatePlaceholderText={'Начало'}
           endDatePlaceholderText={'Конец'}
+          isOutsideRange={day => day.diff(moment()) <= 0 || day.diff(moment().add(6, 'M')) >= 0}
         />
       </div>
     );

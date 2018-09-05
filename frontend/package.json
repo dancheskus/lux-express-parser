@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "axios": "^0.18.0",
+    "rc-slider": "^8.6.2",
     "react": "^16.4.2",
     "react-dates": "^17.2.0",
     "react-dom": "^16.4.2",
