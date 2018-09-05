@@ -9,8 +9,8 @@ import 'react-dates/lib/css/_datepicker.css';
 import DatePicker from './components/DatePicker';
 class App extends Component {
   state = {
-    departure: 'vilnius-coach-station',
-    destination: 'riga-coach-station',
+    departure: 'riga-coach-station',
+    destination: 'vilnius-coach-station',
     maxPricePerTrip: 5,
     isReturning: true,
     start_date: '01.10.2018',

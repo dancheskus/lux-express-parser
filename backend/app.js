@@ -1,7 +1,5 @@
 const moment = require('moment');
 
-// const { isReturning, returningDayRange } = require('./components/settings.js');
-
 const searchTickets = require('./components/searchTickets');
 
 const startApp = async (dep, des, dates, isReturning, returningDayRange, maxPricePerTrip) => {
@@ -23,7 +21,8 @@ const startApp = async (dep, des, dates, isReturning, returningDayRange, maxPric
       bToA[i] && lastReturnDate.diff(moment(bToA[i].date, 'MM-DD-YYYY'), 'd') > 0;
       i++
     ) {
-      result.push(`atob: ${firstDate.format('MM-DD-YYYY')} btoa: ${bToA[i].date}`);
+      // result.push(`atob: ${firstDate.format('MM-DD-YYYY')} btoa: ${bToA[i].date}`);
+      result.push({aToB:aToBtrip, bToA:bToA[i]});
     }
   });
 

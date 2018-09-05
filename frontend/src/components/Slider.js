@@ -32,7 +32,7 @@ export class SliderRangeLine extends React.Component {
         <div style={wrapperStyle}>
           <p>В течении скольких дней хотите вернуться?</p>
           <Range
-            dots
+            // dots
             step={1}
             min={0}
             max={30}
@@ -62,7 +62,7 @@ export class SliderLine extends React.Component {
         <div style={wrapperStyle}>
           <p>Максимальная цена поездки:</p>
           <Slider
-            dots
+            // dots
             marks={{
               5: {
                 style: {
