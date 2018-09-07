@@ -13,16 +13,17 @@ const startApp = async (dep, des, dates, isReturning, returningDayRange, maxPric
     const firstDate = moment(aToBtrip.date, 'MM-DD-YYYY');
     const firstReturnDate = moment(firstDate).add(returningDayRange.min, 'd');
     const lastReturnDate = moment(firstDate).add(returningDayRange.max, 'd');
+
     const firstReturnDateIndex = findFirstReturnDateIndex(bToA, firstReturnDate.format('MM-DD-YYYY'));
     if (firstReturnDateIndex === -1) return;
 
     for (
       let i = firstReturnDateIndex;
-      bToA[i] && lastReturnDate.diff(moment(bToA[i].date, 'MM-DD-YYYY'), 'd') > 0;
+      bToA[i] && lastReturnDate.diff(moment(bToA[i].date, 'MM-DD-YYYY'), 'd') >= 0;
       i++
     ) {
       // result.push(`atob: ${firstDate.format('MM-DD-YYYY')} btoa: ${bToA[i].date}`);
-      result.push({aToB:aToBtrip, bToA:bToA[i]});
+      result.push({ aToB: aToBtrip, bToA: bToA[i] });
     }
   });
 

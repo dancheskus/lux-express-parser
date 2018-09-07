@@ -13,13 +13,7 @@ const wrapperStyle = { width: 400, marginBottom: 40, marginTop: 40 };
 const handle = props => {
   const { value, dragging, index, ...restProps } = props;
   return (
-    <Tooltip
-      prefixCls="rc-slider-tooltip"
-      overlay={value}
-      visible={dragging}
-      placement="top"
-      key={index}
-    >
+    <Tooltip prefixCls="rc-slider-tooltip" overlay={value} visible={dragging} placement="top" key={index}>
       <Handle value={value} {...restProps} />
     </Tooltip>
   );
@@ -40,6 +34,7 @@ export class SliderRangeLine extends React.Component {
             disabled={!this.props.isReturning}
             onAfterChange={value => this.props.onSliderChange(value)}
             allowCross={false}
+            tipFormatter={value => (value > 0 ? value : 'В этот же день')}
             marks={{
               0: 0,
               5: 5,

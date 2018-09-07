@@ -20,7 +20,7 @@ app.post(
     { body: { departure, destination, maxPricePerTrip, isReturning, start_date, end_date, returningDayRange } },
     res
   ) => {
-    // console.log(departure, destination, maxPricePerTrip, isReturning, start_date, end_date, returningDayRange);
+    // console.log(start_date, end_date, returningDayRange);
     const dates = creatingDatesArray(start_date, end_date);
     const result = await startApp(departure, destination, dates, isReturning, returningDayRange, maxPricePerTrip);
     // console.log('result:', result);
