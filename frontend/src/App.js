@@ -7,6 +7,10 @@ import 'react-dates/initialize';
 import 'react-dates/lib/css/_datepicker.css';
 
 import DatePicker from './components/DatePicker';
+
+// const backend = 'http://localhost:5000';
+const backend = 'http://10.0.0.47:5000';
+
 class App extends Component {
   state = {
     departure: 'riga-coach-station',
@@ -35,7 +39,7 @@ class App extends Component {
     e.preventDefault();
     this.setState({ loading: true });
     axios
-      .post('http://localhost:5000/findtickets', {
+      .post(`${backend}/findtickets`, {
         departure: this.state.departure,
         destination: this.state.destination,
         maxPricePerTrip: this.state.maxPricePerTrip,
