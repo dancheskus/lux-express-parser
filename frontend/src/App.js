@@ -7,9 +7,10 @@ import 'react-dates/initialize';
 import 'react-dates/lib/css/_datepicker.css';
 
 import DatePicker from './components/DatePicker';
+import SearchStop from './components/SearchStop';
 
-// const backend = 'http://localhost:5000';
-const backend = 'http://10.0.0.47:5000';
+const backend = 'http://localhost:5000';
+// const backend = 'http://192.168.1.54:5000';
 
 class App extends Component {
   state = {
@@ -69,40 +70,17 @@ class App extends Component {
     this.setState({ returningDayRangeMin: value[0], returningDayRangeMax: value[1] });
   };
 
+  onStopChange = (direction, stop) => this.setState({ [direction]: stop.value });
+
   render() {
     return (
       <div className="App">
         <header className="App-header">
           <h1 className="App-title">LuxExpress</h1>
-
+          <SearchStop placeholder={'From'} direction={'departure'} onStopChange={this.onStopChange} />
+          <SearchStop placeholder={'To'} direction={'destination'} onStopChange={this.onStopChange} />
           <DatePicker onDateChange={this.dateChange} />
           <form onSubmit={this.handleSubmit}>
-            <div>
-              <label>
-                From:
-                <input
-                  placeholder="From"
-                  name="departure"
-                  type="text"
-                  value={this.state.departure}
-                  onChange={this.handleChange}
-                />
-              </label>
-            </div>
-
-            <div>
-              <label>
-                To:
-                <input
-                  placeholder="To"
-                  name="destination"
-                  type="text"
-                  value={this.state.destination}
-                  onChange={this.handleChange}
-                />
-              </label>
-            </div>
-
             <SliderLine
               maxPricePerTrip={this.state.maxPricePerTrip}
               maxPricePerTripChange={this.maxPricePerTripChange}
