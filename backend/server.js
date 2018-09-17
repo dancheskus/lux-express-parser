@@ -44,14 +44,11 @@ app.post(
 
 app.post('/users', (req, res) => {
   const { username, email, password } = req.body;
-  new User({ username, email, password })
+  const user = new User({ username, email, password });
+  user
     .save()
-    .then(savedUser =>
-      res.json({
-        message: 'User saved',
-        content: savedUser,
-      })
-    )
+    .then(() => user.generateAuthToken())
+    .then(token => res.header('x-auth', token).json(user))
     .catch(e => res.status(400).json(e));
 });
 
