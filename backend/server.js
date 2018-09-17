@@ -8,6 +8,9 @@ server.setTimeout(1200000);
 const cors = require('cors');
 app.use(cors());
 
+/* Lodash */
+const _ = require('lodash');
+
 /* Body parser */
 const bodyParser = require('body-parser');
 app.use(bodyParser.json());
@@ -40,13 +43,8 @@ app.post(
 );
 
 app.post('/users', (req, res) => {
-  const user = new User({
-    name: req.body.name,
-    email: req.body.email,
-    password: req.body.password,
-  });
-
-  user
+  const { username, email, password } = req.body;
+  new User({ username, email, password })
     .save()
     .then(savedUser =>
       res.json({
@@ -77,12 +75,31 @@ app.get('/users/:id', (req, res) => {
     .catch(e => res.status(400).json(e));
 });
 
-app.delete('/users/:id', (req, res) => {
+app.delete('/users/:id', async (req, res) => {
   const id = req.params.id;
 
   if (!ObjectID.isValid(id)) return res.status(404).json({ message: 'ID is not valid' });
 
-  User.findByIdAndRemove(id)
+  try {
+    const user = await User.findByIdAndRemove(id);
+
+    if (!user) return res.status(404).json({ message: 'User with this ID was not found' });
+
+    res.json(user);
+  } catch (e) {
+    res.status(400).json(e);
+  }
+});
+
+app.patch('/users/:id', (req, res) => {
+  const id = req.params.id;
+
+  const { email, password } = req.body;
+  if (!password) return res.status(404).json({ message: 'Password is not valid' });
+
+  if (!ObjectID.isValid(id)) return res.status(404).json({ message: 'ID is not valid' });
+
+  User.findByIdAndUpdate(id, { $set: { email, password } }, { new: true })
     .then(user => {
       if (!user) return res.status(404).json({ message: 'User with this ID was not found' });
 
