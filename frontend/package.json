@@ -8,9 +8,12 @@
     "react": "^16.4.2",
     "react-dates": "^17.2.0",
     "react-dom": "^16.4.2",
+    "react-redux": "^5.0.7",
+    "react-router-dom": "^4.3.1",
     "react-scripts": "1.1.5",
     "react-select": "^2.0.0",
-    "react-spinners": "^0.4.5"
+    "react-spinners": "^0.4.5",
+    "redux": "^4.0.0"
   },
   "scripts": {
     "start": "react-scripts start",
