@@ -11,9 +11,12 @@ import SearchStop from './SearchStop';
 import { Redirect } from 'react-router-dom';
 import TicketPage from './TicketPage';
 
+import { connect } from 'react-redux';
+import { addLinks, removeLinks } from '../actions/ticketActions';
+
 const backend = 'http://localhost:5000';
 
-export default class MainSearchEngine extends Component {
+class MainSearchEngine extends Component {
   state = {
     departure: 'riga-coach-station',
     destination: 'vilnius-coach-station',
@@ -54,8 +57,8 @@ export default class MainSearchEngine extends Component {
         },
       })
       .then(res => {
-        console.log(res.data);
         this.setState({ loading: false });
+        this.props.addLinks(res.data);
         this.props.history.push('/results');
       })
       .catch(err => {
@@ -77,7 +80,6 @@ export default class MainSearchEngine extends Component {
   render() {
     return (
       <div className="App">
-        {/* <Redirect to="/results" /> */}
         <header className="App-header">
           <h1 className="App-title">LuxExpress</h1>
           <SearchStop placeholder={'From'} direction={'departure'} onStopChange={this.onStopChange} />
@@ -120,3 +122,17 @@ export default class MainSearchEngine extends Component {
     );
   }
 }
+
+const mapStateToProps = state => ({
+  tickets: state.tickets,
+});
+
+const mapDispatchToProps = dispatch => ({
+  addLinks: links => dispatch(addLinks(links)),
+  removeLinks: () => dispatch(removeLinks()),
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(MainSearchEngine);
