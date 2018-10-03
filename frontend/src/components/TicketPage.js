@@ -1,15 +1,14 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import SingleTicket from './SingleTicket';
 
 class TicketPage extends Component {
   render() {
     return (
       <div>
-        {/* {this.props.tickets[0].response.map((link, el) => (
-          <h2 key={el}>{link}</h2>
-        ))} */}
-
-        {console.log(this.props.tickets[0].response)}
+        {this.props.tickets[0].response.map((value, key) => (
+          <SingleTicket ticket={value} key={key} />
+        ))}
       </div>
     );
   }

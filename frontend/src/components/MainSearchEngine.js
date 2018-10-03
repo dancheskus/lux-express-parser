@@ -58,6 +58,7 @@ class MainSearchEngine extends Component {
       })
       .then(res => {
         this.setState({ loading: false });
+        this.props.removeLinks();
         this.props.addLinks(res.data);
         this.props.history.push('/results');
       })
