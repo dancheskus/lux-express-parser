@@ -4,7 +4,10 @@ const searchTickets = require('./components/searchTickets');
 
 const startApp = async (dep, des, dates, isReturning, returningDayRange, maxPricePerTrip) => {
   const aToB = await searchTickets(dep, des, dates, maxPricePerTrip);
-  if (!isReturning) return aToB;
+  if (!isReturning)
+    return aToB.map(aToBtrip => ({
+      aToB: aToBtrip,
+    }));
   const bToA = await searchTickets(des, dep, dates, maxPricePerTrip);
 
   const result = [];

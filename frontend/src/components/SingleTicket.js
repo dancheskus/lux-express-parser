@@ -3,22 +3,6 @@ import { connect } from 'react-redux';
 
 class SingleTicket extends Component {
   render() {
-    // const {
-    //   date: aToBdate,
-    //   totalPrice: aToBtotalPrice,
-    //   TripId: aToBTripId,
-    //   DepartureRouteStopId: aToBDepartureRouteStopId,
-    //   DestinationRouteStopId: aToBDestinationRouteStopId,
-    // } = this.props.ticket.aToB;
-
-    // const {
-    //   date: bToAdate,
-    //   totalPrice: bToAtotalPrice,
-    //   TripId: bToATripId,
-    //   DepartureRouteStopId: bToADepartureRouteStopId,
-    //   DestinationRouteStopId: bToADestinationRouteStopId,
-    // } = this.props.ticket.bToA;
-
     return (
       <div>
         <div>
