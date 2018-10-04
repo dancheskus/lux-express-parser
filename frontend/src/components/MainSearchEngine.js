@@ -8,8 +8,6 @@ import 'react-dates/lib/css/_datepicker.css';
 
 import DatePicker from './DatePicker';
 import SearchStop from './SearchStop';
-import { Redirect } from 'react-router-dom';
-import TicketPage from './TicketPage';
 
 import { connect } from 'react-redux';
 import { addLinks, removeLinks } from '../actions/ticketActions';
@@ -81,6 +79,7 @@ class MainSearchEngine extends Component {
   render() {
     return (
       <div className="App">
+        {/* <SingleSelect /> */}
         <header className="App-header">
           <h1 className="App-title">LuxExpress</h1>
           <SearchStop placeholder={'From'} direction={'departure'} onStopChange={this.onStopChange} />
