@@ -1,3 +1,6 @@
+/* Axios */
+const axios = require('axios');
+
 /* Express */
 const port = 5000;
 const app = require('express')();
@@ -28,6 +31,10 @@ const startApp = require('./app');
 
 app.get('/', (req, res) => {
   res.json({ response: 'Hello World' });
+});
+
+app.get('/findstops', async (_, res) => {
+  res.send((await axios.get('https://ticket.luxexpress.eu/ru/Stops/FindBy')).data);
 });
 
 app.post(
