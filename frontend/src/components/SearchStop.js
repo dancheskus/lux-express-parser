@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import Select from 'react-select';
+
 const backend = 'http://localhost:5000';
 
 export default class BusStopSearch extends Component {
@@ -14,11 +15,6 @@ export default class BusStopSearch extends Component {
   }
 
   render() {
-    return (
-      <div>
-        {this.state.inputValue}
-        <Select options={this.state.options} placeholder={this.props.placeholder} onChange={this.onChange} />
-      </div>
-    );
+    return <Select options={this.state.options} placeholder={this.props.placeholder} onChange={this.onChange} />;
   }
 }

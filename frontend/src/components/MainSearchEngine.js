@@ -79,7 +79,6 @@ class MainSearchEngine extends Component {
   render() {
     return (
       <div className="App">
-        {/* <SingleSelect /> */}
         <header className="App-header">
           <h1 className="App-title">LuxExpress</h1>
           <SearchStop placeholder={'From'} direction={'departure'} onStopChange={this.onStopChange} />

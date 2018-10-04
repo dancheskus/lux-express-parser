@@ -1,8 +1,11 @@
 /* Axios */
 const axios = require('axios');
 
+/* dotENV */
+require('dotenv').config({ path: '../.env' });
+
 /* Express */
-const port = 5000;
+const port = process.env.BACKEND_PORT;
 const app = require('express')();
 const server = app.listen(port, () => console.log(`Server is working on port ${port}`));
 server.setTimeout(1200000);
