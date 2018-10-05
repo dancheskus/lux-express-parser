@@ -2,7 +2,9 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import Select from 'react-select';
 
-const backend = 'http://localhost:5000';
+import ENV from '../.env';
+
+const backend = ENV.BACKEND;
 
 export default class BusStopSearch extends Component {
   state = { options: [] };

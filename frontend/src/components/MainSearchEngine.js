@@ -12,7 +12,9 @@ import SearchStop from './SearchStop';
 import { connect } from 'react-redux';
 import { addLinks, removeLinks } from '../actions/ticketActions';
 
-const backend = 'http://localhost:5000';
+import ENV from '../.env';
+
+const backend = ENV.BACKEND;
 
 class MainSearchEngine extends Component {
   state = {
