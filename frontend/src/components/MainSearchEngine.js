@@ -12,10 +12,6 @@ import SearchStop from './SearchStop';
 import { connect } from 'react-redux';
 import { addLinks, removeLinks } from '../actions/ticketActions';
 
-import ENV from '../.env';
-
-const backend = ENV.BACKEND;
-
 class MainSearchEngine extends Component {
   state = {
     departure: 'riga-coach-station',
@@ -44,7 +40,7 @@ class MainSearchEngine extends Component {
     e.preventDefault();
     this.setState({ loading: true });
     axios
-      .post(`${backend}/findtickets`, {
+      .post(`${process.env.REACT_APP_BACKEND_URL}/findtickets`, {
         departure: this.state.departure,
         destination: this.state.destination,
         maxPricePerTrip: this.state.maxPricePerTrip,
