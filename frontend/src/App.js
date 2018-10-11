@@ -15,6 +15,7 @@ class App extends Component {
           <Navigation />
           <Switch>
             <Route path="/" component={MainSearchEngine} exact />
+
             <Route
               path="/results"
               render={() => (this.props.tickets.length ? <TicketPage /> : <Redirect to="/login" />)}
