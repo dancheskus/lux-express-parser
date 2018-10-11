@@ -7,6 +7,7 @@ const app = require('express')();
 const server = app.listen(port, () => console.log(`Server is working on port ${port}`));
 server.setTimeout(1200000);
 const ticketRoutes = require('./routes/tickets');
+const userRoutes = require('./routes/users');
 
 /* Cors */
 const cors = require('cors');
@@ -22,8 +23,8 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 /* Mongoose */
 require('./DB/mongooseConfig');
-const User = require('./DB/models/user');
 
 /* Express routes */
 
 app.use('/', ticketRoutes);
+app.use('/', userRoutes);

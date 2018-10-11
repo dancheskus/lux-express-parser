@@ -1,7 +1,8 @@
 const mongoose = require('mongoose');
+const bcrypt = require('bcrypt');
 
-const userSchema = new mongoose.Schema({
-  name: {
+const UserSchema = new mongoose.Schema({
+  username: {
     type: String,
     unique: true,
     trim: true,
@@ -20,4 +21,16 @@ const userSchema = new mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model('User', userSchema);
+UserSchema.pre('save', function() {
+  this.email = this.email.toLowerCase();
+  this.password = bcrypt.hashSync(this.password, 10);
+});
+
+UserSchema.methods.toJSON = function() {
+  const obj = this.toObject();
+  delete obj.password;
+  delete obj.__v;
+  return obj;
+};
+
+module.exports = mongoose.model('User', UserSchema);
