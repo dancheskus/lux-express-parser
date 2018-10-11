@@ -22,30 +22,26 @@ const handle = props => {
 export class SliderRangeLine extends React.Component {
   render() {
     return (
-      <div>
-        <div style={wrapperStyle}>
-          <p>В течении скольких дней хотите вернуться?</p>
-          <Range
-            // dots
-            step={1}
-            min={0}
-            max={30}
-            defaultValue={[this.props.returningDayRangeMin, this.props.returningDayRangeMax]}
-            disabled={!this.props.isReturning}
-            onAfterChange={value => this.props.onSliderChange(value)}
-            allowCross={false}
-            tipFormatter={value => (value > 0 ? value : 'В этот же день')}
-            marks={{
-              0: 0,
-              5: 5,
-              10: 10,
-              15: 15,
-              20: 20,
-              25: 25,
-              30: 30,
-            }}
-          />
-        </div>
+      <div style={wrapperStyle}>
+        <p>В течении скольких дней хотите вернуться?</p>
+        <Range
+          min={0}
+          max={30}
+          defaultValue={[this.props.returningDayRangeMin, this.props.returningDayRangeMax]}
+          disabled={!this.props.isReturning}
+          onAfterChange={value => this.props.onSliderChange(value)}
+          allowCross={false}
+          tipFormatter={value => (value > 0 ? value : 'В этот же день')}
+          marks={{
+            0: 0,
+            5: 5,
+            10: 10,
+            15: 15,
+            20: 20,
+            25: 25,
+            30: 30,
+          }}
+        />
       </div>
     );
   }
