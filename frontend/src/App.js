@@ -14,11 +14,16 @@ class App extends Component {
         <div>
           <Navigation />
           <Switch>
-            <Route path="/" component={MainSearchEngine} exact />
+            <Route
+              path="/search"
+              render={() => (this.props.user.isLoggedIn ? <MainSearchEngine /> : <Redirect to="/login" />)}
+              exact
+            />
 
             <Route
               path="/results"
-              render={() => (this.props.tickets.length ? <TicketPage /> : <Redirect to="/login" />)}
+              render={() => (this.props.tickets.length ? <TicketPage /> : <Redirect to="/" />)}
+              exact
             />
             <Route path="/login" component={LoginPage} exact />
 
@@ -30,6 +35,6 @@ class App extends Component {
   }
 }
 
-const mapStateToProps = state => ({ tickets: state.tickets });
+const mapStateToProps = state => ({ tickets: state.tickets, user: state.user });
 
 export default connect(mapStateToProps)(App);

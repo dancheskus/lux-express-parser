@@ -1,11 +1,21 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import axios from 'axios';
+import { verifyToken } from '../authHelper';
+import { logInUser, logOutUser } from '../actions/userActions';
 
-export default class LoginPage extends Component {
+class LoginPage extends Component {
   state = {
     username: '',
     password: '',
   };
+
+  componentDidMount() {
+    const token = localStorage.getItem('token');
+    if (!token) return;
+    verifyToken(token, this.props.dispatch, this.props.history);
+  }
+
   handleChange = e => {
     this.setState({ [e.target.name]: e.target.value });
   };
@@ -16,8 +26,9 @@ export default class LoginPage extends Component {
         username: this.state.username,
         password: this.state.password,
       })
-      .then(({ data }) => {
-        console.log(data);
+      .then(({ data: { token } }) => {
+        localStorage.setItem('token', token);
+        verifyToken(token, this.props.dispatch, this.props.history);
       })
       .catch(({ response }) => {
         console.log(response.data.message);
@@ -28,6 +39,7 @@ export default class LoginPage extends Component {
     return (
       <div>
         <form>
+          <b>{this.props.user.isLoggedIn.toString()}</b>
           <label>Username</label>
           <input type="text" name="username" required value={this.state.username} onChange={this.handleChange} />
           <label>Password</label>
@@ -38,3 +50,18 @@ export default class LoginPage extends Component {
     );
   }
 }
+
+const mapStateToProps = state => ({
+  user: state.user,
+});
+
+const mapDispatchToProps = dispatch => ({
+  dispatch,
+  logInUser: () => dispatch(logInUser()),
+  logOutUser: () => dispatch(logOutUser()),
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(LoginPage);
