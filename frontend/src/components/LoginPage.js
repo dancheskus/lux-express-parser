@@ -11,19 +11,19 @@ export default class LoginPage extends Component {
   };
   loginPressed = e => {
     e.preventDefault();
-    console.log(typeof this.state.username, typeof this.state.password);
     axios
       .post(`${process.env.REACT_APP_BACKEND_URL}/login`, {
         username: this.state.username,
         password: this.state.password,
       })
-      .then(res => {
-        console.log(res);
+      .then(({ data }) => {
+        console.log(data);
       })
-      .catch(err => {
-        console.log(err);
+      .catch(({ response }) => {
+        console.log(response.data.message);
       });
   };
+
   render() {
     return (
       <div>

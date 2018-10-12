@@ -25,7 +25,8 @@ router.post('/register', async (req, res) => {
 router.post('/login', async (req, res) => {
   try {
     const user = await User.findOne({ username: req.body.username });
-    if (!bcrypt.compareSync(req.body.password, user.password)) return;
+    if (!bcrypt.compareSync(req.body.password, user.password))
+      return res.status(400).json({ message: 'Not authorized' });
     const token = jwt.sign({ id: user.id }, process.env.SECRET_KEY); //, { expiresIn: '10s' }
     res.json({ user, token });
   } catch (e) {
