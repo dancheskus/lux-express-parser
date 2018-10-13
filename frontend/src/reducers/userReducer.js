@@ -1,8 +1,8 @@
-const token = localStorage.getItem('token');
-if (!token) return;
-verifyToken(token, props.dispatch);
+import { verifyToken } from '../authHelper';
 
-const userReducer = (state = { isLoggedIn: false }, action) => {
+const isLoggedIn = verifyToken(localStorage.getItem('token'));
+
+const userReducer = (state = { isLoggedIn }, action) => {
   const allTypes = {
     LOG_IN: () => ({ isLoggedIn: true }),
     LOG_OUT: () => ({ isLoggedIn: false }),
