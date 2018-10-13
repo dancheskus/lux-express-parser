@@ -10,12 +10,6 @@ class LoginPage extends Component {
     password: '',
   };
 
-  componentDidMount() {
-    const token = localStorage.getItem('token');
-    if (!token) return;
-    verifyToken(token, this.props.dispatch, this.props.history);
-  }
-
   handleChange = e => {
     this.setState({ [e.target.name]: e.target.value });
   };
@@ -28,7 +22,7 @@ class LoginPage extends Component {
       })
       .then(({ data: { token } }) => {
         localStorage.setItem('token', token);
-        verifyToken(token, this.props.dispatch, this.props.history);
+        verifyToken(token, this.props.dispatch);
       })
       .catch(({ response }) => {
         console.log(response.data.message);

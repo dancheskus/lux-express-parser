@@ -9,6 +9,7 @@ import { connect } from 'react-redux';
 
 class App extends Component {
   render() {
+    console.log('render-- ', this.props.user.isLoggedIn);
     return (
       <BrowserRouter>
         <div>
@@ -37,4 +38,7 @@ class App extends Component {
 
 const mapStateToProps = state => ({ tickets: state.tickets, user: state.user });
 
-export default connect(mapStateToProps)(App);
+export default connect(
+  mapStateToProps,
+  dispatch => ({ dispatch })
+)(App);

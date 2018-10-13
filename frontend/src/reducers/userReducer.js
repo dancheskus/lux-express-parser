@@ -1,3 +1,7 @@
+const token = localStorage.getItem('token');
+if (!token) return;
+verifyToken(token, props.dispatch);
+
 const userReducer = (state = { isLoggedIn: false }, action) => {
   const allTypes = {
     LOG_IN: () => ({ isLoggedIn: true }),
