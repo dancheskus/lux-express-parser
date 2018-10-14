@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
 import MainSearchEngine from './components/MainSearchEngine';
 import TicketPage from './components/TicketPage';
 import LoginPage from './components/LoginPage';
+import RegisterPage from './components/RegisterPage';
 import PageNotFound from './components/PageNotFound';
 import Navigation from './components/Navigation';
 import { connect } from 'react-redux';
@@ -18,6 +19,12 @@ class App extends Component {
             <Route
               path="/search"
               render={() => (this.props.user.isLoggedIn ? <MainSearchEngine /> : <Redirect to="/login" />)}
+              exact
+            />
+
+            <Route
+              path="/register"
+              render={() => (!this.props.user.isLoggedIn ? <RegisterPage /> : <Redirect to="/search" />)}
               exact
             />
 
