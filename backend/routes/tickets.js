@@ -4,7 +4,11 @@ const { creatingDatesArray } = require('../components/settings.js');
 const startApp = require('../app');
 
 router.get('/findstops', async (_, res) => {
-  res.send((await axios.get('https://ticket.luxexpress.eu/ru/Stops/FindBy')).data);
+  try {
+    res.send((await axios.get('https://ticket.luxexpress.eu/ru/Stops/FindBy')).data);
+  } catch (error) {
+    res.status(400).json({ message: 'Lux express сервер не доступен' });
+  }
 });
 
 router.post(
