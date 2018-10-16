@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import axios from 'axios';
 import { verifyToken } from '../authHelper';
 import { logInUser, logOutUser } from '../actions/userActions';
+import { withRouter } from 'react-router';
 
 class LoginPage extends Component {
   state = {
@@ -23,6 +24,7 @@ class LoginPage extends Component {
       .then(({ data: { token } }) => {
         localStorage.setItem('token', token);
         verifyToken(token, this.props.dispatch);
+        this.props.history.push('/');
       })
       .catch(({ response }) => {
         console.log(response.data.message);
@@ -54,7 +56,9 @@ const mapDispatchToProps = dispatch => ({
   logOutUser: () => dispatch(logOutUser()),
 });
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(LoginPage);
+export default withRouter(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(LoginPage)
+);

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import axios from 'axios';
 import { logInUser } from '../actions/userActions';
+import { withRouter } from 'react-router';
 
 class RegisterPage extends Component {
   state = {
@@ -23,6 +24,7 @@ class RegisterPage extends Component {
       })
       .then(({ data }) => {
         console.log(data.message);
+        this.props.history.push('/login');
       })
       .catch(({ response }) => {
         console.log(response.data.message);
@@ -53,7 +55,9 @@ const mapDispatchToProps = dispatch => ({
   logInUser: () => dispatch(logInUser()),
 });
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(RegisterPage);
+export default withRouter(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(RegisterPage)
+);
