@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import axios from 'axios';
-import { verifyToken } from '../authHelper';
 import { logInUser } from '../actions/userActions';
 
 class RegisterPage extends Component {
@@ -22,9 +21,8 @@ class RegisterPage extends Component {
         email: this.state.email,
         password: this.state.password,
       })
-      .then(({ data: { token } }) => {
-        localStorage.setItem('token', token);
-        verifyToken(token, this.props.dispatch);
+      .then(({ data }) => {
+        console.log(data.message);
       })
       .catch(({ response }) => {
         console.log(response.data.message);

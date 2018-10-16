@@ -10,14 +10,13 @@ import { connect } from 'react-redux';
 
 class App extends Component {
   render() {
-    console.log('render-- ', this.props.user.isLoggedIn);
     return (
       <BrowserRouter>
         <div>
           <Navigation />
           <Switch>
             <Route
-              path="/search"
+              path="/"
               render={() => (this.props.user.isLoggedIn ? <MainSearchEngine /> : <Redirect to="/login" />)}
               exact
             />

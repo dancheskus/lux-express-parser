@@ -33,7 +33,6 @@ class LoginPage extends Component {
     return (
       <div>
         <form>
-          <b>{this.props.user.isLoggedIn.toString()}</b>
           <label>Username</label>
           <input type="text" name="username" required value={this.state.username} onChange={this.handleChange} />
           <label>Password</label>
