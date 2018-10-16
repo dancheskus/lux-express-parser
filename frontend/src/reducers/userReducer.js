@@ -5,7 +5,10 @@ const isLoggedIn = verifyToken(localStorage.getItem('token'));
 const userReducer = (state = { isLoggedIn }, action) => {
   const allTypes = {
     LOG_IN: () => ({ isLoggedIn: true }),
-    LOG_OUT: () => ({ isLoggedIn: false }),
+    LOG_OUT: () => {
+      localStorage.removeItem('token');
+      return { isLoggedIn: false };
+    },
     default: () => state,
   };
   return (allTypes[action.type] || allTypes['default'])();
