@@ -2,96 +2,64 @@ import React, { Component } from 'react';
 import { CardElement, injectStripe } from 'react-stripe-elements';
 import axios from 'axios';
 
+const style = {
+  base: {
+    iconColor: '#c4f0ff',
+    color: '#fff',
+    fontWeight: 500,
+    fontFamily: 'Roboto, Open Sans, Segoe UI, sans-serif',
+    fontSize: '16px',
+    fontSmoothing: 'antialiased',
+
+    ':-webkit-autofill': {
+      color: '#fce883',
+    },
+    '::placeholder': {
+      color: '#87BBFD',
+    },
+  },
+  invalid: {
+    iconColor: '#FFC7EE',
+    color: '#FFC7EE',
+  },
+};
+
 class CheckoutForm extends Component {
-  state = { submitting: false, submitted: false };
+  state = { name: '', email: '', phone: '', amount: 1800, submitting: false, submitted: false, errorMessage: '' };
 
-  submit = async ev => {
-    let { token } = await this.props.stripe.createToken({ name: 'Name' });
+  handleChange = e => {
+    e.target.name === 'phone'
+      ? this.setState({ phone: e.target.value.match(/^[\+\d]?(?:[\d-.\s()]*)$/im) || this.state.phone })
+      : this.setState({ [e.target.name]: e.target.value });
+  };
 
-    let response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/charge`, {
+  handleSubmit = async e => {
+    e.preventDefault();
+    this.setState({ submitting: true });
+    const { token } = await this.props.stripe.createToken({ name: 'Name' });
+    this._element.clear();
+
+    const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/charge`, {
       token: token.id,
-      amount: 4000,
+      amount: this.state.amount,
       email: 'dancheskus@gmail.com',
     });
-    if (response.statusText === 'OK') this.setState({ complete: true });
+    if (response.statusText === 'OK') this.setState({ submitting: false, submitted: true });
   };
 
-  submitHandler = e => {
+  resetButton = e => {
     e.preventDefault();
-    this.setState({ submitting: false, submitted: true });
-    // Trigger HTML5 validation UI on the form if any of the inputs fail
-    // validation.
-    // var plainInputsValid = true;
-    // Array.prototype.forEach.call(form.querySelectorAll('input'), function(input) {
-    //   if (input.checkValidity && !input.checkValidity()) {
-    //     plainInputsValid = false;
-    //     return;
-    //   }
-    // });
-    // if (!plainInputsValid) {
-    //   triggerBrowserValidation();
-    //   return;
-    // }
-
-    // // Show a loading screen...
-    // example.classList.add('submitting');
-
-    // // Disable all inputs.
-    // disableInputs();
-
-    // Gather additional customer data we may have collected in our form.
-    // var name = form.querySelector('#' + exampleName + '-name');
-    // var address1 = form.querySelector('#' + exampleName + '-address');
-    // var city = form.querySelector('#' + exampleName + '-city');
-    // var state = form.querySelector('#' + exampleName + '-state');
-    // var zip = form.querySelector('#' + exampleName + '-zip');
-    // var additionalData = {
-    //   name: name ? name.value : undefined,
-    //   address_line1: address1 ? address1.value : undefined,
-    //   address_city: city ? city.value : undefined,
-    //   address_state: state ? state.value : undefined,
-    //   address_zip: zip ? zip.value : undefined,
-    // };
-
-    // Use Stripe.js to create a token. We only need to pass in one Element
-    // from the Element group in order to create a token. We can also pass
-    // in the additional customer data we collected in our form.
-    // stripe.createToken(elements[0], additionalData).then(function(result) {
-    //   // Stop loading!
-    //   example.classList.remove('submitting');
-
-    //   if (result.token) {
-    //     // If we received a token, show the token ID.
-    //     example.querySelector('.token').innerText = result.token.id;
-    //     example.classList.add('submitted');
-    //   } else {
-    //     // Otherwise, un-disable inputs.
-    //     enableInputs();
-    //   }
-    // });
+    this.setState({
+      name: '',
+      email: '',
+      phone: '',
+      submitting: false,
+      submitted: false,
+      errorMessage: '',
+    });
   };
-  render() {
-    const style = {
-      base: {
-        iconColor: '#c4f0ff',
-        color: '#fff',
-        fontWeight: 500,
-        fontFamily: 'Roboto, Open Sans, Segoe UI, sans-serif',
-        fontSize: '16px',
-        fontSmoothing: 'antialiased',
 
-        ':-webkit-autofill': {
-          color: '#fce883',
-        },
-        '::placeholder': {
-          color: '#87BBFD',
-        },
-      },
-      invalid: {
-        iconColor: '#FFC7EE',
-        color: '#FFC7EE',
-      },
-    };
+  render() {
     return (
       <div className="globalCheckoutContainer">
         <main>
@@ -102,7 +70,7 @@ class CheckoutForm extends Component {
           </div>
           <section className="container-lg">
             <div
-              className={`cell example example1 ${this.state.submitting && 'submitting'} ${this.state.submitted &&
+              className={`cell example example1  ${this.state.submitting && 'submitting'} ${this.state.submitted &&
                 'submitted'}`}
             >
               <form>
@@ -118,6 +86,9 @@ class CheckoutForm extends Component {
                       placeholder="Daniels Sleifmanis"
                       required=""
                       autoComplete="name"
+                      name="name"
+                      value={this.state.name}
+                      onChange={this.handleChange}
                     />
                   </div>
                   <div className="row">
@@ -131,6 +102,9 @@ class CheckoutForm extends Component {
                       placeholder="dancheskus@gmail.com"
                       required=""
                       autoComplete="email"
+                      name="email"
+                      value={this.state.email}
+                      onChange={this.handleChange}
                     />
                   </div>
                   <div className="row">
@@ -144,18 +118,27 @@ class CheckoutForm extends Component {
                       placeholder="+371 25506338"
                       required=""
                       autoComplete="tel"
+                      name="phone"
+                      value={this.state.phone}
+                      onChange={this.handleChange}
                     />
                   </div>
                 </fieldset>
                 <fieldset>
                   <div className="row">
-                    <CardElement style={style} />
+                    <CardElement
+                      onReady={c => (this._element = c)}
+                      style={style}
+                      onChange={e =>
+                        e.error ? this.setState({ errorMessage: e.error.message }) : this.setState({ errorMessage: '' })
+                      }
+                    />
                   </div>
                 </fieldset>
-                <button type="submit" data-tid="elements_examples.form.pay_button" onClick={this.submitHandler}>
-                  Pay 15€
+                <button type="submit" data-tid="elements_examples.form.pay_button" onClick={this.handleSubmit}>
+                  Pay {this.state.amount / 100}€
                 </button>
-                <div className="error" role="alert">
+                <div className={`error ${this.state.errorMessage && 'visible'}`} role="alert">
                   <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 17 17">
                     <path
                       className="base"
@@ -168,7 +151,7 @@ class CheckoutForm extends Component {
                       d="M8.5,7.29791847 L6.12604076,4.92395924 C5.79409512,4.59201359 5.25590488,4.59201359 4.92395924,4.92395924 C4.59201359,5.25590488 4.59201359,5.79409512 4.92395924,6.12604076 L7.29791847,8.5 L4.92395924,10.8739592 C4.59201359,11.2059049 4.59201359,11.7440951 4.92395924,12.0760408 C5.25590488,12.4079864 5.79409512,12.4079864 6.12604076,12.0760408 L8.5,9.70208153 L10.8739592,12.0760408 C11.2059049,12.4079864 11.7440951,12.4079864 12.0760408,12.0760408 C12.4079864,11.7440951 12.4079864,11.2059049 12.0760408,10.8739592 L9.70208153,8.5 L12.0760408,6.12604076 C12.4079864,5.79409512 12.4079864,5.25590488 12.0760408,4.92395924 C11.7440951,4.59201359 11.2059049,4.59201359 10.8739592,4.92395924 L8.5,7.29791847 L8.5,7.29791847 Z"
                     />
                   </svg>
-                  <span className="message" />
+                  <span className="message">{this.state.errorMessage}</span>
                 </div>
               </form>
               <div className="success">
@@ -206,12 +189,9 @@ class CheckoutForm extends Component {
                   Payment successful
                 </h3>
                 <p className="message">
-                  <span data-tid="elements_examples.success.message">
-                    Thanks for trying Stripe Elements. No money was charged, but we generated a token:{' '}
-                  </span>
-                  <span className="token">tok_189gMN2eZvKYlo2CwTBv9KKh</span>
+                  <span data-tid="elements_examples.success.message">Thank you for your payment</span>
                 </p>
-                <a className="reset" href="#">
+                <a className="reset" onClick={this.resetButton}>
                   <svg
                     width="32px"
                     height="32px"
@@ -229,40 +209,6 @@ class CheckoutForm extends Component {
               </div>
             </div>
           </section>
-
-          {/* <style>
-        .github-corner:hover .octo-arm {
-          animation: octocat-wave 560ms ease-in-out
-        }
-
-        @keyframes octocat-wave {
-
-          0%,
-          100% {
-            transform: rotate(0)
-          }
-
-          20%,
-          60% {
-            transform: rotate(-25deg)
-          }
-
-          40%,
-          80% {
-            transform: rotate(10deg)
-          }
-        }
-
-        @media (max-width:500px) {
-          .github-corner:hover .octo-arm {
-            animation: none
-          }
-
-          .github-corner .octo-arm {
-            animation: octocat-wave 560ms ease-in-out
-          }
-        }
-      </style> */}
         </main>
       </div>
     );
