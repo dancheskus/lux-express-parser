@@ -22,7 +22,7 @@ const handle = props => {
 export class SliderRangeLine extends React.Component {
   render() {
     return (
-      <div style={wrapperStyle}>
+      <div style={wrapperStyle} className="slider">
         <p>В течении скольких дней хотите вернуться?</p>
         <Range
           min={0}
@@ -49,32 +49,30 @@ export class SliderRangeLine extends React.Component {
 export class SliderLine extends React.Component {
   render() {
     return (
-      <div>
-        <div style={wrapperStyle}>
-          <p>Максимальная цена поездки:</p>
-          <Slider
-            // dots
-            marks={{
-              5: {
-                style: {
-                  color: 'red',
-                },
-                label: <strong>5</strong>,
+      <div style={wrapperStyle} className="slider">
+        <p>Максимальная цена поездки:</p>
+        <Slider
+          // dots
+          marks={{
+            5: {
+              style: {
+                color: 'red',
               },
-              10: 10,
-              15: 15,
-              20: 20,
-              25: 25,
-              30: 30,
-            }}
-            step={1}
-            min={5}
-            max={30}
-            defaultValue={this.props.maxPricePerTrip}
-            onAfterChange={value => this.props.maxPricePerTripChange(value)}
-            handle={handle}
-          />
-        </div>
+              label: <strong>5</strong>,
+            },
+            10: 10,
+            15: 15,
+            20: 20,
+            25: 25,
+            30: 30,
+          }}
+          step={1}
+          min={5}
+          max={30}
+          defaultValue={this.props.maxPricePerTrip}
+          onAfterChange={value => this.props.maxPricePerTripChange(value)}
+          handle={handle}
+        />
       </div>
     );
   }

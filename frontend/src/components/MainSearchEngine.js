@@ -12,6 +12,9 @@ import SearchStop from './SearchStop';
 import { connect } from 'react-redux';
 import { addLinks, removeLinks } from '../actions/ticketActions';
 
+import { Elements, StripeProvider } from 'react-stripe-elements';
+import CheckoutForm from './CheckoutForm';
+
 class MainSearchEngine extends Component {
   state = {
     departure: 'riga-coach-station',
@@ -77,6 +80,11 @@ class MainSearchEngine extends Component {
   render() {
     return (
       <div className="App">
+        <StripeProvider apiKey="pk_test_Vxp3iv9kxsklzcGJBP1x5K6w">
+          <Elements>
+            <CheckoutForm />
+          </Elements>
+        </StripeProvider>
         <header className="App-header">
           <h1 className="App-title">LuxExpress</h1>
           <SearchStop placeholder={'From'} direction={'departure'} onStopChange={this.onStopChange} />
