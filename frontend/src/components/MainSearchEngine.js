@@ -80,7 +80,7 @@ class MainSearchEngine extends Component {
   render() {
     return (
       <div className="App">
-        <StripeProvider apiKey="pk_test_Vxp3iv9kxsklzcGJBP1x5K6w">
+        <StripeProvider apiKey={process.env.REACT_APP_STRIPE_API_KEY}>
           <Elements>
             <CheckoutForm />
           </Elements>

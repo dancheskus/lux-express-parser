@@ -29,7 +29,7 @@ class CheckoutForm extends Component {
 
   handleChange = e => {
     e.target.name === 'phone'
-      ? this.setState({ phone: e.target.value.match(/^[\+\d]?(?:[\d-.\s()]*)$/im) || this.state.phone })
+      ? this.setState({ phone: e.target.value.match(/^[+\d]?(?:[\d-.\s()]*)$/im) || this.state.phone })
       : this.setState({ [e.target.name]: e.target.value });
   };
 
