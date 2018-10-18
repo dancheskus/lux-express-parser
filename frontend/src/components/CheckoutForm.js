@@ -36,7 +36,9 @@ class CheckoutForm extends Component {
   handleSubmit = async e => {
     e.preventDefault();
     this.setState({ submitting: true });
-    const { token } = await this.props.stripe.createToken({ name: 'Name' });
+
+    const { token } = await this.props.stripe.createToken({ name: this.state.name });
+
     this._element.clear();
 
     const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/charge`, {
