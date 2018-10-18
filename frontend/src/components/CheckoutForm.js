@@ -25,7 +25,7 @@ const style = {
 };
 
 class CheckoutForm extends Component {
-  state = { name: '', email: '', phone: '', amount: 1800, submitting: false, submitted: false, errorMessage: '' };
+  state = { name: '', email: '', phone: '', amount: 300, submitting: false, submitted: false, errorMessage: '' };
 
   handleChange = e => {
     e.target.name === 'phone'
