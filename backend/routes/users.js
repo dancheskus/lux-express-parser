@@ -34,7 +34,7 @@ router.post('/login', async (req, res) => {
   }
 });
 
-router.get('/test', isVerified, (req, res) => {
+router.get('/getUser', isVerified, (req, res) => {
   try {
     res.json(req.user);
   } catch (error) {
