@@ -6,6 +6,8 @@ import { logOutUser } from '../actions/userActions';
 const Navigation = props => {
   return (
     <div>
+      {props.user.isLoggedIn.toString()}
+      {props.user.email}
       <NavLink to="/">Home</NavLink>
 
       {!props.user.isLoggedIn ? (

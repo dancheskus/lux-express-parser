@@ -1,11 +1,12 @@
 import jwtDecode from 'jwt-decode';
 import { logInUser, logOutUser } from './actions/userActions';
 
-export const verifyToken = (token, dispatch) => {
-  if (!token) return false;
-  const { exp } = jwtDecode(token);
+export const verifyToken = (data, dispatch) => {
+  if (!data.token) return false;
+  const { exp } = jwtDecode(data.token);
   if (!exp) {
-    if (dispatch) dispatch(logInUser());
+    if (dispatch) dispatch(logInUser(data));
+
     return true;
   }
   const timeLeft = exp * 1000 - Date.now();

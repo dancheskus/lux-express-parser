@@ -13,6 +13,14 @@ const isVerified = async (req, res, next) => {
   }
 };
 
+router.get('/findbytoken', isVerified, (req, res) => {
+  try {
+    res.json(req.user);
+  } catch (error) {
+    res.status(400).json({ message: 'please log in' });
+  }
+});
+
 router.post('/register', async (req, res) => {
   try {
     const user = await User.create(req.body);
@@ -31,14 +39,6 @@ router.post('/login', async (req, res) => {
     res.json({ user, token });
   } catch (e) {
     res.status(400).json({ message: 'Not authorized' });
-  }
-});
-
-router.get('/test', isVerified, (req, res) => {
-  try {
-    res.json(req.user);
-  } catch (error) {
-    res.status(400).json({ message: 'please log in' });
   }
 });
 

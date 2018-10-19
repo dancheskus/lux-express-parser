@@ -12,31 +12,33 @@ class App extends Component {
   render() {
     return (
       <BrowserRouter>
-        <div>
-          <Navigation />
-          <Switch>
-            <Route
-              path="/"
-              render={() => (this.props.user.isLoggedIn ? <MainSearchEngine /> : <Redirect to="/login" />)}
-              exact
-            />
+        {true && this.props.user.serverStoppedThinking ? (
+          <div>
+            <Navigation />
+            <Switch>
+              <Route
+                path="/"
+                render={() => (this.props.user.isLoggedIn ? <MainSearchEngine /> : <Redirect to="/login" />)}
+                exact
+              />
 
-            <Route
-              path="/register"
-              render={() => (!this.props.user.isLoggedIn ? <RegisterPage /> : <Redirect to="/search" />)}
-              exact
-            />
+              <Route
+                path="/register"
+                render={() => (!this.props.user.isLoggedIn ? <RegisterPage /> : <Redirect to="/search" />)}
+                exact
+              />
 
-            <Route
-              path="/results"
-              render={() => (this.props.tickets.length ? <TicketPage /> : <Redirect to="/" />)}
-              exact
-            />
-            <Route path="/login" component={LoginPage} exact />
+              <Route
+                path="/results"
+                render={() => (this.props.tickets.length ? <TicketPage /> : <Redirect to="/" />)}
+                exact
+              />
+              <Route path="/login" component={LoginPage} exact />
 
-            <Route component={PageNotFound} />
-          </Switch>
-        </div>
+              <Route component={PageNotFound} />
+            </Switch>
+          </div>
+        ) : null}
       </BrowserRouter>
     );
   }

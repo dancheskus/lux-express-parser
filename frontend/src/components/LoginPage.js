@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import axios from 'axios';
 import { verifyToken } from '../authHelper';
-import { logInUser, logOutUser } from '../actions/userActions';
+import { logInUser, logOutUser, serverStoppedThinking } from '../actions/userActions';
 import { withRouter } from 'react-router';
 
 class LoginPage extends Component {
@@ -21,9 +21,10 @@ class LoginPage extends Component {
         username: this.state.username,
         password: this.state.password,
       })
-      .then(({ data: { token } }) => {
-        localStorage.setItem('token', token);
-        verifyToken(token, this.props.dispatch);
+      .then(async ({ data }) => {
+        localStorage.setItem('token', data.token);
+        await verifyToken(data, this.props.dispatch);
+        serverStoppedThinking();
         this.props.history.push('/');
       })
       .catch(({ response }) => {
@@ -54,6 +55,7 @@ const mapDispatchToProps = dispatch => ({
   dispatch,
   logInUser: () => dispatch(logInUser()),
   logOutUser: () => dispatch(logOutUser()),
+  serverStoppedThinking: () => dispatch(serverStoppedThinking()),
 });
 
 export default withRouter(
