@@ -6,8 +6,6 @@ import LoginPage from './components/LoginPage';
 import RegisterPage from './components/RegisterPage';
 import PageNotFound from './components/PageNotFound';
 import Navigation from './components/Navigation';
-import Home from './components/Home';
-import AuthenticatedComponent from './components/AuthenticatedComponent';
 import { connect } from 'react-redux';
 
 class App extends Component {
@@ -17,20 +15,27 @@ class App extends Component {
         <div>
           <Navigation />
           <Switch>
-            <Route path="/login" component={LoginPage} exact />
-            <Route path="/register" component={RegisterPage} exact />
+            <Route
+              path="/"
+              render={() => (this.props.user.isLoggedIn ? <MainSearchEngine /> : <Redirect to="/login" />)}
+              exact
+            />
+
+            <Route
+              path="/register"
+              render={() => (!this.props.user.isLoggedIn ? <RegisterPage /> : <Redirect to="/search" />)}
+              exact
+            />
+
             <Route
               path="/results"
               render={() => (this.props.tickets.length ? <TicketPage /> : <Redirect to="/" />)}
               exact
             />
+            <Route path="/login" component={LoginPage} exact />
 
-            <AuthenticatedComponent>
-              <Route path="/" component={MainSearchEngine} exact />
-              <Route path="/home" component={Home} exact />
-            </AuthenticatedComponent>
+            <Route component={PageNotFound} />
           </Switch>
-          <Route path="/404" component={PageNotFound} exact />
         </div>
       </BrowserRouter>
     );
