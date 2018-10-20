@@ -25,12 +25,11 @@ class App extends Component {
               exact
             />
 
-            <AuthenticatedComponent>
-              <Route path="/" component={MainSearchEngine} exact />
-              <Route path="/home" component={Home} exact />
-            </AuthenticatedComponent>
+            <AuthenticatedComponent path="/" component={MainSearchEngine} exact />
+            <AuthenticatedComponent path="/home" component={Home} exact />
+
+            <Route component={PageNotFound} />
           </Switch>
-          <Route path="/404" component={PageNotFound} exact />
         </div>
       </BrowserRouter>
     );

@@ -5,7 +5,7 @@ import { withRouter } from 'react-router-dom';
 
 class AuthenticatedComponent extends Component {
   state = {
-    user: undefined,
+    user: null,
   };
 
   componentDidMount() {
@@ -25,15 +25,16 @@ class AuthenticatedComponent extends Component {
       });
   }
 
-  render() {
-    if (this.state.user === undefined)
-      return (
-        <div>
-          <h1>LOADING...</h1>
-        </div>
-      );
-    return <div>{this.props.children}</div>;
-  }
+  // render() {
+  //   if (!this.state.user)
+  //     return (
+  //       <div>
+  //         <h1>LOADING...</h1>
+  //       </div>
+  //     );
+  //   return <this.props.component />;
+  // }
+  render = () => (this.state.user ? <this.props.component /> : null);
 }
 
 export default withRouter(AuthenticatedComponent);
