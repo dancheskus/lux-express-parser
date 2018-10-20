@@ -7,6 +7,7 @@ import RegisterPage from './components/RegisterPage';
 import PageNotFound from './components/PageNotFound';
 import Navigation from './components/Navigation';
 import { connect } from 'react-redux';
+import { PrivateRoute } from './PrivateRoute';
 
 class App extends Component {
   render() {
@@ -15,11 +16,7 @@ class App extends Component {
         <div>
           <Navigation />
           <Switch>
-            <Route
-              path="/"
-              render={() => (this.props.user.isLoggedIn ? <MainSearchEngine /> : <Redirect to="/login" />)}
-              exact
-            />
+            <PrivateRoute path="/" component={MainSearchEngine} exact />
 
             <Route
               path="/register"

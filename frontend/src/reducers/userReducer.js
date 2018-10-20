@@ -2,7 +2,7 @@ import { verifyToken } from '../authHelper';
 
 const isLoggedIn = verifyToken(localStorage.getItem('token'));
 
-const userReducer = (state = { isLoggedIn }, action) => {
+const userReducer = (state = { isLoggedIn: true }, action) => {
   const allTypes = {
     LOG_IN: () => ({ isLoggedIn: true }),
     LOG_OUT: () => {
