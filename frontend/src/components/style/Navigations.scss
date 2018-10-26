@@ -1,0 +1,22 @@
+.navbar {
+  display: flex;
+  height: 60px;
+  background-image: -webkit-linear-gradient(top, #a8a8a8, #a1a1a1);
+  align-items: center;
+  text-transform: uppercase;
+  box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.13);
+  li {
+    margin: 20px;
+    a {
+      color: rgb(80, 80, 80);
+      transition: color 0.3s;
+      &:hover {
+        color: rgb(54, 54, 54);
+      }
+    }
+  }
+  .logo {
+    height: 60%;
+    margin: 0 20px 0 20px;
+  }
+}

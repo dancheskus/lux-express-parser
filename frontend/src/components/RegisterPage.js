@@ -32,8 +32,8 @@ class RegisterPage extends Component {
   };
   render() {
     return (
-      <div>
-        <form>
+      <div className="login-page">
+        <form className="login-form">
           <label>Username</label>
           <input type="text" name="username" required value={this.state.username} onChange={this.handleChange} />
           <label>Email</label>

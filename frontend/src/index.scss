@@ -1,10 +1,3 @@
-body {
-  font-family: sans-serif;
-}
-* {
-  box-sizing: border-box;
-}
-
 .slider {
   margin-left: 20px;
 }
@@ -60,7 +53,7 @@ textarea .globalCheckoutContainer {
 } */
 
 body .globalCheckoutContainer {
-  background: #fff;
+  // background: #fff;
   min-height: 100%;
   display: -ms-flexbox;
   display: flex;
@@ -308,14 +301,14 @@ main {
   top: 380px;
   left: 4%;
   width: 35%;
-  background: linear-gradient(90deg, hsla(0, 0%, 100%, 0.65), hsla(0, 0%, 100%, 0));
+  // background: linear-gradient(90deg, hsla(0, 0%, 100%, 0.65), hsla(0, 0%, 100%, 0));
 }
 
 .stripes .s3 {
   top: 380px;
   right: 0;
   width: 38%;
-  background: linear-gradient(90deg, #e4e9f0, rgba(228, 233, 240, 0));
+  // background: linear-gradient(90deg, #e4e9f0, rgba(228, 233, 240, 0));
 }
 
 main > .container-lg {

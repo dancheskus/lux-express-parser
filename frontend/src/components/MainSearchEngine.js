@@ -86,61 +86,62 @@ class MainSearchEngine extends Component {
 
   render() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <h1 className="App-title">LuxExpress</h1>
+      <div className="app">
+        <h1 className="app-title">Поиск дешевых билетов</h1>
+        <div className="search-stop">
           <SearchStop placeholder={'From'} direction={'departure'} onStopChange={this.onStopChange} />
+        </div>
+        <div className="search-stop">
           <SearchStop placeholder={'To'} direction={'destination'} onStopChange={this.onStopChange} />
+        </div>
+        <div className="date-picker">
           <DatePicker onDateChange={this.dateChange} />
-          <form onSubmit={this.handleSubmit}>
-            <SliderLine
-              maxPricePerTrip={this.state.maxPricePerTrip}
-              maxPricePerTripChange={this.maxPricePerTripChange}
-            />
+        </div>
+        <form onSubmit={this.handleSubmit}>
+          <SliderLine maxPricePerTrip={this.state.maxPricePerTrip} maxPricePerTripChange={this.maxPricePerTripChange} />
 
-            <div>
-              <label>
-                Return?
-                <input
-                  name="isReturning"
-                  type="checkbox"
-                  disabled={!this.payedAccount}
-                  checked={this.state.isReturning}
-                  onChange={this.handleChekbox}
-                />
-                {!this.payedAccount && '(Платная опция)'}
-              </label>
-            </div>
+          <div>
+            <label>
+              Return?
+              <input
+                name="isReturning"
+                type="checkbox"
+                disabled={!this.payedAccount}
+                checked={this.state.isReturning}
+                onChange={this.handleChekbox}
+              />
+              {!this.payedAccount && '(Платная опция)'}
+            </label>
+          </div>
 
-            <SliderRangeLine
-              isReturning={this.state.isReturning}
-              onSliderChange={this.onSliderChange}
-              returningDayRangeMin={this.state.returningDayRangeMin}
-              returningDayRangeMax={this.state.returningDayRangeMax}
-            />
-
-            <div>
-              <button
-                type="submit"
-                disabled={
-                  this.state.loading ||
-                  !this.state.start_date ||
-                  !this.state.end_date ||
-                  !this.state.departure ||
-                  !this.state.destination
-                }
-              >
-                Search
-                <Loader loading={this.state.loading} />
-              </button>
-            </div>
-          </form>
-          {this.props.user.payedUntil <= Date.now() && (
-            <h1>
-              <NavLink to="/checkout">ДАЙ ДЕНЕГ для полного доступа</NavLink>
-            </h1>
-          )}
-        </header>
+          <SliderRangeLine
+            isReturning={this.state.isReturning}
+            onSliderChange={this.onSliderChange}
+            returningDayRangeMin={this.state.returningDayRangeMin}
+            returningDayRangeMax={this.state.returningDayRangeMax}
+          />
+        </form>
+        <div>
+          <button
+            className="search-button"
+            type="submit"
+            disabled={
+              this.state.loading ||
+              !this.state.start_date ||
+              !this.state.end_date ||
+              !this.state.departure ||
+              !this.state.destination
+            }
+          >
+            Поиск
+            <Loader loading={this.state.loading} />
+          </button>
+        </div>
+        {this.props.user.payedUntil <= Date.now() && (
+          <h1 className="full-access">
+            <NavLink to="/checkout">полный доступ</NavLink>
+          </h1>
+        )}
       </div>
     );
   }
