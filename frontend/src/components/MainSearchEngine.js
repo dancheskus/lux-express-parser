@@ -14,18 +14,18 @@ import { connect } from 'react-redux';
 import { addLinks, removeLinks } from '../actions/ticketActions';
 
 class MainSearchEngine extends Component {
+  payedAccount = this.props.user.payedUntil > Date.now();
   state = {
     departure: 'riga-coach-station',
     destination: 'vilnius-coach-station',
     maxPricePerTrip: 5,
-    isReturning: true,
+    isReturning: this.payedAccount ? true : false,
     start_date: '01.10.2018',
     end_date: '11.10.2018',
     returningDayRangeMin: 2,
     returningDayRangeMax: 4,
     loading: false,
   };
-  componentDidMount() {}
 
   dateChange = (startDate, endDate) =>
     this.setState({
@@ -96,9 +96,11 @@ class MainSearchEngine extends Component {
                 <input
                   name="isReturning"
                   type="checkbox"
+                  disabled={!this.payedAccount}
                   checked={this.state.isReturning}
                   onChange={this.handleChekbox}
                 />
+                {!this.payedAccount && '(Платная опция)'}
               </label>
             </div>
 
