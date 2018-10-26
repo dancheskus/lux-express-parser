@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import { CardElement, injectStripe } from 'react-stripe-elements';
 import axios from 'axios';
+import { withRouter } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { addUser, removeUser } from '../actions/userActions';
 
 const style = {
   base: {
@@ -25,7 +28,15 @@ const style = {
 };
 
 class CheckoutForm extends Component {
-  state = { name: '', email: '', phone: '', amount: 300, submitting: false, submitted: false, errorMessage: '' };
+  state = {
+    name: this.props.user.username,
+    email: this.props.user.email,
+    phone: '',
+    amount: 300,
+    submitting: false,
+    submitted: false,
+    errorMessage: '',
+  };
 
   handleChange = e => {
     e.target.name === 'phone'
@@ -42,10 +53,12 @@ class CheckoutForm extends Component {
     this._element.clear();
 
     const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/charge`, {
-      token: token.id,
+      stripeToken: token.id,
+      userToken: localStorage.token,
       amount: this.state.amount,
       email: 'dancheskus@gmail.com',
     });
+    this.props.addUser(response.data.user);
     if (response.statusText === 'OK') this.setState({ submitting: false, submitted: true });
   };
 
@@ -59,6 +72,7 @@ class CheckoutForm extends Component {
       submitted: false,
       errorMessage: '',
     });
+    this.props.history.push('/');
   };
 
   render() {
@@ -85,7 +99,7 @@ class CheckoutForm extends Component {
                       id="example1-name"
                       data-tid="elements_examples.form.name_placeholder"
                       type="text"
-                      placeholder="Daniels Sleifmanis"
+                      placeholder={this.props.user.username}
                       required=""
                       autoComplete="name"
                       name="name"
@@ -101,7 +115,7 @@ class CheckoutForm extends Component {
                       id="example1-email"
                       data-tid="elements_examples.form.email_placeholder"
                       type="email"
-                      placeholder="dancheskus@gmail.com"
+                      placeholder={this.props.user.email}
                       required=""
                       autoComplete="email"
                       name="email"
@@ -117,7 +131,7 @@ class CheckoutForm extends Component {
                       id="example1-phone"
                       data-tid="elements_examples.form.phone_placeholder"
                       type="tel"
-                      placeholder="+371 25506338"
+                      placeholder="Enter your phone number"
                       required=""
                       autoComplete="tel"
                       name="phone"
@@ -217,4 +231,18 @@ class CheckoutForm extends Component {
   }
 }
 
-export default injectStripe(CheckoutForm);
+const mapStateToProps = state => ({
+  user: state.user,
+});
+
+const mapDispatchToProps = dispatch => ({
+  addUser: user => dispatch(addUser(user)),
+  removeUser: () => dispatch(removeUser()),
+});
+
+export default withRouter(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(injectStripe(CheckoutForm))
+);

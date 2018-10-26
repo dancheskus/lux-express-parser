@@ -5,14 +5,13 @@ import { SliderRangeLine, SliderLine } from './Slider';
 import moment from 'moment';
 import 'react-dates/initialize';
 import 'react-dates/lib/css/_datepicker.css';
+import { NavLink } from 'react-router-dom';
 
 import DatePicker from './DatePicker';
 import SearchStop from './SearchStop';
 
 import { connect } from 'react-redux';
 import { addLinks, removeLinks } from '../actions/ticketActions';
-
-import HOCCheckout from './HOCCheckout';
 
 class MainSearchEngine extends Component {
   state = {
@@ -26,6 +25,7 @@ class MainSearchEngine extends Component {
     returningDayRangeMax: 4,
     loading: false,
   };
+  componentDidMount() {}
 
   dateChange = (startDate, endDate) =>
     this.setState({
@@ -79,7 +79,6 @@ class MainSearchEngine extends Component {
   render() {
     return (
       <div className="App">
-        {/* <HOCCheckout /> */}
         <header className="App-header">
           <h1 className="App-title">LuxExpress</h1>
           <SearchStop placeholder={'From'} direction={'departure'} onStopChange={this.onStopChange} />
@@ -117,6 +116,11 @@ class MainSearchEngine extends Component {
               </button>
             </div>
           </form>
+          {this.props.user.payedUntil <= Date.now() && (
+            <h1>
+              <NavLink to="/checkout">ДАЙ ДЕНЕГ для полного доступа</NavLink>
+            </h1>
+          )}
         </header>
       </div>
     );
@@ -125,6 +129,7 @@ class MainSearchEngine extends Component {
 
 const mapStateToProps = state => ({
   tickets: state.tickets,
+  user: state.user,
 });
 
 const mapDispatchToProps = dispatch => ({

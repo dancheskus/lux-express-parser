@@ -31,8 +31,3 @@ require('./DB/mongooseConfig');
 app.use('/', ticketRoutes);
 app.use('/', userRoutes);
 app.use('/', stripe);
-
-const User = require('./DB/models/user');
-User.findByIdAndUpdate('5bd19b4db20d8440e0a0ef18', { payedUntil: 1540464163000 })
-  .then(res => console.log(res))
-  .catch(e => console.log(e));

@@ -20,7 +20,7 @@ const UserSchema = new mongoose.Schema({
     required: true,
   },
   payedUntil: {
-    type: Date,
+    type: Number,
     default: null,
   },
 });

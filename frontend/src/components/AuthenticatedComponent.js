@@ -7,7 +7,6 @@ import { addUser } from '../actions/userActions';
 
 class AuthenticatedComponent extends Component {
   componentDidMount() {
-    console.log(!!this.props.user);
     const jwt = getJwt();
     if (!jwt) {
       this.props.history.push('/login');
