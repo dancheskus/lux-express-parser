@@ -8,9 +8,7 @@ import { addUser } from '../actions/userActions';
 class AuthenticatedComponent extends Component {
   componentDidMount() {
     const jwt = getJwt();
-    if (!jwt) {
-      this.props.history.push('/login');
-    }
+    if (!jwt) return this.props.history.push('/login');
 
     axios
       .get(`${process.env.REACT_APP_BACKEND_URL}/getUser`, { headers: { 'x-auth': jwt } })
@@ -23,7 +21,7 @@ class AuthenticatedComponent extends Component {
       });
   }
 
-  render = () => Object.keys(this.props.user).length > 0 && <this.props.component />;
+  render = () => Object.keys(this.props.user).length > 0 && <this.props.component {...this.props} />;
 }
 
 const mapStateToProps = state => ({

@@ -6,7 +6,6 @@ import LoginPage from './components/LoginPage';
 import RegisterPage from './components/RegisterPage';
 import PageNotFound from './components/PageNotFound';
 import Navigation from './components/Navigation';
-import Home from './components/Home';
 import HOCCheckout from './components/HOCCheckout';
 import AuthenticatedComponent from './components/AuthenticatedComponent';
 import { connect } from 'react-redux';
@@ -27,7 +26,6 @@ class App extends Component {
             />
 
             <AuthenticatedComponent path="/" component={MainSearchEngine} exact />
-            <AuthenticatedComponent path="/home" component={Home} exact />
             <AuthenticatedComponent path="/checkout" component={HOCCheckout} exact />
 
             <Route component={PageNotFound} />
