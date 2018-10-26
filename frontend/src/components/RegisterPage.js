@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import axios from 'axios';
-import { logInUser } from '../actions/userActions';
+import { addUser } from '../actions/userActions';
 import { withRouter } from 'react-router';
 
 class RegisterPage extends Component {
@@ -52,7 +52,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  logInUser: () => dispatch(logInUser()),
+  addUser: user => dispatch(addUser(user)),
 });
 
 export default withRouter(

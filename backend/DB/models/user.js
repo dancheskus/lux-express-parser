@@ -19,6 +19,10 @@ const UserSchema = new mongoose.Schema({
     minlength: 1,
     required: true,
   },
+  payedUntil: {
+    type: Date,
+    default: null,
+  },
 });
 
 UserSchema.pre('save', function() {

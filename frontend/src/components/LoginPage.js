@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import axios from 'axios';
+import { addUser, removeUser } from '../actions/userActions';
 import { withRouter } from 'react-router';
 
 class LoginPage extends Component {
@@ -18,7 +19,8 @@ class LoginPage extends Component {
         username: this.state.username,
         password: this.state.password,
       })
-      .then(({ data: { token } }) => {
+      .then(({ data: { user, token } }) => {
+        this.props.addUser(user);
         localStorage.setItem('token', token);
         this.props.history.push('/');
       })
@@ -47,9 +49,9 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  // dispatch,
-  // logInUser: () => dispatch(logInUser()),
-  // logOutUser: () => dispatch(logOutUser()),
+  dispatch,
+  addUser: user => dispatch(addUser(user)),
+  removeUser: () => dispatch(removeUser()),
 });
 
 export default withRouter(

@@ -2,13 +2,12 @@ import React, { Component } from 'react';
 import { getJwt } from '../helpers/jwt';
 import axios from 'axios';
 import { withRouter } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { addUser } from '../actions/userActions';
 
 class AuthenticatedComponent extends Component {
-  state = {
-    user: null,
-  };
-
   componentDidMount() {
+    console.log(!!this.props.user);
     const jwt = getJwt();
     if (!jwt) {
       this.props.history.push('/login');
@@ -17,7 +16,7 @@ class AuthenticatedComponent extends Component {
     axios
       .get(`${process.env.REACT_APP_BACKEND_URL}/getUser`, { headers: { 'x-auth': jwt } })
       .then(res => {
-        this.setState({ user: res.data });
+        this.props.addUser(res.data);
       })
       .catch(() => {
         localStorage.removeItem('token');
@@ -25,16 +24,20 @@ class AuthenticatedComponent extends Component {
       });
   }
 
-  // render() {
-  //   if (!this.state.user)
-  //     return (
-  //       <div>
-  //         <h1>LOADING...</h1>
-  //       </div>
-  //     );
-  //   return <this.props.component />;
-  // }
-  render = () => (this.state.user ? <this.props.component /> : null);
+  render = () => Object.keys(this.props.user).length > 0 && <this.props.component />;
 }
 
-export default withRouter(AuthenticatedComponent);
+const mapStateToProps = state => ({
+  user: state.user,
+});
+
+const mapDispatchToProps = dispatch => ({
+  addUser: user => dispatch(addUser(user)),
+});
+
+export default withRouter(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(AuthenticatedComponent)
+);

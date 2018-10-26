@@ -1,2 +1,2 @@
-export const logInUser = () => ({ type: 'LOG_IN' });
-export const logOutUser = () => ({ type: 'LOG_OUT' });
+export const addUser = user => ({ type: 'ADD_USER', user });
+export const removeUser = () => ({ type: 'REMOVE_USER' });

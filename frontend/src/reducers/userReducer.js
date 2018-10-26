@@ -1,10 +1,10 @@
-const userReducer = (state = { isLoggedIn: false }, action) => {
+const userReducer = (state = {}, action) => {
   const allTypes = {
-    // LOG_IN: () => ({ isLoggedIn: true }),
-    // LOG_OUT: () => {
-    //   localStorage.removeItem('token');
-    //   return { isLoggedIn: false };
-    // },
+    ADD_USER: () => action.user,
+    REMOVE_USER: () => {
+      localStorage.removeItem('token');
+      return {};
+    },
     default: () => state,
   };
   return (allTypes[action.type] || allTypes['default'])();

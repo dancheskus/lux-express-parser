@@ -1,25 +1,30 @@
 import React, { Fragment } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { logOutUser } from '../actions/userActions';
+import { removeUser } from '../actions/userActions';
 
 const Navigation = props => {
   return (
     <div>
       <NavLink to="/">Home</NavLink>
 
-      {!props.user.isLoggedIn ? (
+      {Object.keys(props.user).length === 0 && (
         <Fragment>
           <NavLink to="/register">Register</NavLink>
           <NavLink to="/login">Login</NavLink>
         </Fragment>
-      ) : null}
+      )}
 
-      {props.user.isLoggedIn ? (
-        <NavLink to="#">
-          <div onClick={() => props.logOutUser()}>Log Out</div>
-        </NavLink>
-      ) : null}
+      {Object.keys(props.user).length > 0 && (
+        <div
+          onClick={() => {
+            props.removeUser();
+            props.history.push('login');
+          }}
+        >
+          Log Out
+        </div>
+      )}
     </div>
   );
 };
@@ -29,10 +34,12 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  logOutUser: () => dispatch(logOutUser()),
+  removeUser: () => dispatch(removeUser()),
 });
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Navigation);
+export default withRouter(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(Navigation)
+);
