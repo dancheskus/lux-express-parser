@@ -18,12 +18,12 @@ import { getJwt } from '../helpers/jwt';
 class MainSearchEngine extends Component {
   payedAccount = this.props.user.payedUntil > Date.now();
   state = {
-    departure: 'riga-coach-station',
-    destination: 'vilnius-coach-station',
+    departure: null,
+    destination: null,
     maxPricePerTrip: 5,
     isReturning: this.payedAccount ? true : false,
-    start_date: '01.10.2018',
-    end_date: '11.10.2018',
+    start_date: null,
+    end_date: null,
     returningDayRangeMin: 2,
     returningDayRangeMax: 4,
     loading: false,
@@ -120,8 +120,17 @@ class MainSearchEngine extends Component {
             />
 
             <div>
-              <button type="submit" disabled={this.state.loading}>
-                Submit
+              <button
+                type="submit"
+                disabled={
+                  this.state.loading ||
+                  !this.state.start_date ||
+                  !this.state.end_date ||
+                  !this.state.departure ||
+                  !this.state.destination
+                }
+              >
+                Search
                 <Loader loading={this.state.loading} />
               </button>
             </div>

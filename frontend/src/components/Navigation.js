@@ -1,31 +1,39 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import { NavLink, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { removeUser } from '../actions/userActions';
 
 const Navigation = props => {
+  const isLoggedIn = Object.keys(props.user).length === 0;
   return (
-    <div>
-      <NavLink to="/">Home</NavLink>
-
-      {Object.keys(props.user).length === 0 && (
-        <Fragment>
+    <ul className="navbar">
+      <li>
+        <NavLink to="/">Home</NavLink>
+      </li>
+      {isLoggedIn && (
+        <li>
           <NavLink to="/register">Register</NavLink>
+        </li>
+      )}
+      {isLoggedIn && (
+        <li>
           <NavLink to="/login">Login</NavLink>
-        </Fragment>
+        </li>
       )}
-
-      {Object.keys(props.user).length > 0 && (
-        <div
-          onClick={() => {
-            props.removeUser();
-            props.history.push('login');
-          }}
-        >
-          Log Out
-        </div>
+      {!isLoggedIn && (
+        <li>
+          <NavLink
+            to="#"
+            onClick={() => {
+              props.removeUser();
+              props.history.push('/login');
+            }}
+          >
+            Log Out
+          </NavLink>
+        </li>
       )}
-    </div>
+    </ul>
   );
 };
 
