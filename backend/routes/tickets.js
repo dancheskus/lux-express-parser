@@ -3,7 +3,7 @@ const router = require('express').Router();
 const { creatingDatesArray } = require('../components/settings.js');
 const startApp = require('../app');
 
-router.get('/findstops', async (_, res) => {
+router.get('/getstops', async (_, res) => {
   try {
     res.send((await axios.get('https://ticket.luxexpress.eu/ru/Stops/FindBy')).data);
   } catch (error) {

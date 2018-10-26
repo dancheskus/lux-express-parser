@@ -9,7 +9,7 @@ export default class BusStopSearch extends Component {
 
   async componentDidMount() {
     try {
-      const { data } = await axios.get(process.env.REACT_APP_BACKEND_URL + '/findstops');
+      const { data } = await axios.get(process.env.REACT_APP_BACKEND_URL + '/getstops');
       this.setState({ options: data.map(({ StopName, Slug }) => ({ label: StopName, value: Slug })) });
     } catch (error) {
       console.log(error.response.data.message);
