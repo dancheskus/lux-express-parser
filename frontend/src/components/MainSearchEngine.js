@@ -13,6 +13,8 @@ import SearchStop from './SearchStop';
 import { connect } from 'react-redux';
 import { addLinks, removeLinks } from '../actions/ticketActions';
 
+import { getJwt } from '../helpers/jwt';
+
 class MainSearchEngine extends Component {
   payedAccount = this.props.user.payedUntil > Date.now();
   state = {
@@ -40,20 +42,26 @@ class MainSearchEngine extends Component {
 
   handleSubmit = e => {
     e.preventDefault();
+    const jwt = getJwt();
     this.setState({ loading: true });
     axios
-      .post(`${process.env.REACT_APP_BACKEND_URL}/findtickets`, {
-        departure: this.state.departure,
-        destination: this.state.destination,
-        maxPricePerTrip: this.state.maxPricePerTrip,
-        isReturning: this.state.isReturning,
-        start_date: this.state.start_date,
-        end_date: this.state.end_date,
-        returningDayRange: {
-          min: this.state.returningDayRangeMin,
-          max: this.state.returningDayRangeMax,
+      .post(
+        `${process.env.REACT_APP_BACKEND_URL}/findtickets`,
+        {
+          departure: this.state.departure,
+          destination: this.state.destination,
+          maxPricePerTrip: this.state.maxPricePerTrip,
+          isReturning: this.state.isReturning,
+          start_date: this.state.start_date,
+          end_date: this.state.end_date,
+          returningDayRange: {
+            min: this.state.returningDayRangeMin,
+            max: this.state.returningDayRangeMax,
+          },
         },
-      })
+        { headers: { 'x-auth': jwt } }
+      )
+
       .then(res => {
         this.setState({ loading: false });
         this.props.removeLinks();

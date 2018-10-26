@@ -3,15 +3,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
 const router = require('express').Router();
-
-const isVerified = async (req, res, next) => {
-  try {
-    req.user = await User.findOne({ _id: jwt.verify(req.headers['x-auth'], process.env.SECRET_KEY).id });
-    next();
-  } catch (error) {
-    res.status(400).json({ message: 'Please log in' });
-  }
-};
+const isVerified = require('../helpers/userVerification');
 
 router.post('/register', async (req, res) => {
   try {
