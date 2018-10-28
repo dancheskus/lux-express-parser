@@ -120,23 +120,23 @@ class MainSearchEngine extends Component {
             returningDayRangeMin={this.state.returningDayRangeMin}
             returningDayRangeMax={this.state.returningDayRangeMax}
           />
+          <div>
+            <button
+              className="search-button"
+              type="submit"
+              disabled={
+                this.state.loading ||
+                !this.state.start_date ||
+                !this.state.end_date ||
+                !this.state.departure ||
+                !this.state.destination
+              }
+            >
+              Поиск
+              <Loader loading={this.state.loading} />
+            </button>
+          </div>
         </form>
-        <div>
-          <button
-            className="search-button"
-            type="submit"
-            disabled={
-              this.state.loading ||
-              !this.state.start_date ||
-              !this.state.end_date ||
-              !this.state.departure ||
-              !this.state.destination
-            }
-          >
-            Поиск
-            <Loader loading={this.state.loading} />
-          </button>
-        </div>
         {this.props.user.payedUntil <= Date.now() && (
           <h1 className="full-access">
             <NavLink to="/checkout">полный доступ</NavLink>
