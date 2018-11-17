@@ -28,15 +28,16 @@ const style = {
 };
 
 class CheckoutForm extends Component {
-  state = {
+  initialState = {
     name: this.props.user.username,
     email: this.props.user.email,
     phone: '',
-    amount: 300,
     submitting: false,
     submitted: false,
     errorMessage: '',
   };
+
+  state = { ...this.initialState, amount: 300 };
 
   handleChange = e => {
     e.target.name === 'phone'
@@ -64,14 +65,7 @@ class CheckoutForm extends Component {
 
   resetButton = e => {
     e.preventDefault();
-    this.setState({
-      name: '',
-      email: '',
-      phone: '',
-      submitting: false,
-      submitted: false,
-      errorMessage: '',
-    });
+    this.setState(this.initialState);
     this.props.history.push('/');
   };
 
@@ -145,9 +139,7 @@ class CheckoutForm extends Component {
                     <CardElement
                       onReady={c => (this._element = c)}
                       style={style}
-                      onChange={e =>
-                        e.error ? this.setState({ errorMessage: e.error.message }) : this.setState({ errorMessage: '' })
-                      }
+                      onChange={e => this.setState({ errorMessage: e.error ? e.error.message : '' })}
                     />
                   </div>
                 </fieldset>

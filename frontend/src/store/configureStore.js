@@ -2,7 +2,7 @@ import { createStore, combineReducers } from 'redux';
 
 import ticketsReducer from '../reducers/ticketReducer';
 import userReducer from '../reducers/userReducer';
-// import { verifyToken } from '../authHelper';
+// import { verifyToken } from '../helpers/auth';
 
 export default () => {
   const store = createStore(

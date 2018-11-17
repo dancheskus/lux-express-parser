@@ -6,18 +6,16 @@ import { connect } from 'react-redux';
 import { DateRangePicker } from 'react-dates';
 
 class DatePicker extends Component {
-  payedAccount = this.props.user.payedUntil > Date.now();
+  paidAccount = this.props.user.payedUntil > Date.now();
+
   state = {
     startDate: null,
     endDate: null,
     focusedInput: null,
   };
+
   handleDateChange = async ({ startDate, endDate }) => {
-    if (!this.payedAccount && this.state.endDate) {
-      this.setState({ startDate, endDate: null });
-    } else {
-      this.setState({ startDate, endDate });
-    }
+    this.setState({ startDate, endDate: startDate !== this.state.startDate ? null : endDate });
     this.props.onDateChange(startDate, endDate);
   };
 
@@ -37,7 +35,7 @@ class DatePicker extends Component {
           startDatePlaceholderText={'Начало'}
           endDatePlaceholderText={'Конец'}
           isOutsideRange={day => {
-            if (!this.payedAccount && this.state.startDate && !this.state.endDate) {
+            if (!this.paidAccount && this.state.startDate) {
               return day.diff(moment()) <= 0 || day.diff(moment(this.state.startDate).add(7, 'd')) > 0;
             } else {
               return day.diff(moment()) <= 0 || day.diff(moment().add(6, 'M')) >= 0;
