@@ -6,7 +6,7 @@ import LoginPage from './components/LoginPage';
 import RegisterPage from './components/RegisterPage';
 import PageNotFound from './components/PageNotFound';
 import Navigation from './components/Navigation';
-import HOCCheckout from './components/HOCCheckout';
+import HOCCheckout from './components/CheckoutForm/index';
 import AuthenticatedComponent from './components/AuthenticatedComponent';
 import { connect } from 'react-redux';
 
