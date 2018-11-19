@@ -10,6 +10,8 @@ import ErrorIcon from './svg/ErrorIcon';
 import SuccessIcon from './svg/SuccessIcon';
 import ResetIcon from './svg/ResetIcon';
 
+import InputField from './InputField';
+
 class CheckoutForm extends Component {
   initialState = {
     name: this.props.user.username,
@@ -68,54 +70,27 @@ class CheckoutForm extends Component {
             >
               <form>
                 <fieldset>
-                  <div className="custom-row">
-                    <label htmlFor="example1-name" data-tid="elements_examples.form.name_label">
-                      Name
-                    </label>
-                    <input
-                      id="example1-name"
-                      data-tid="elements_examples.form.name_placeholder"
-                      type="text"
-                      placeholder={this.props.user.username}
-                      required=""
-                      autoComplete="name"
-                      name="name"
-                      value={this.state.name}
-                      onChange={this.handleChange}
-                    />
-                  </div>
-                  <div className="custom-row">
-                    <label htmlFor="example1-email" data-tid="elements_examples.form.email_label">
-                      Email
-                    </label>
-                    <input
-                      id="example1-email"
-                      data-tid="elements_examples.form.email_placeholder"
-                      type="email"
-                      placeholder={this.props.user.email}
-                      required=""
-                      autoComplete="email"
-                      name="email"
-                      value={this.state.email}
-                      onChange={this.handleChange}
-                    />
-                  </div>
-                  <div className="custom-row">
-                    <label htmlFor="example1-phone" data-tid="elements_examples.form.phone_label">
-                      Phone
-                    </label>
-                    <input
-                      id="example1-phone"
-                      data-tid="elements_examples.form.phone_placeholder"
-                      type="tel"
-                      placeholder="Enter your phone number"
-                      required=""
-                      autoComplete="tel"
-                      name="phone"
-                      value={this.state.phone}
-                      onChange={this.handleChange}
-                    />
-                  </div>
+                  <InputField
+                    fieldName="name"
+                    value={this.state.name}
+                    placeholder={this.props.user.username}
+                    type="text"
+                    handleChange={this.handleChange}
+                  />
+                  <InputField
+                    fieldName="email"
+                    value={this.state.email}
+                    placeholder={this.props.user.email}
+                    type="email"
+                    handleChange={this.handleChange}
+                  />
+                  <InputField
+                    fieldName="phone"
+                    value={this.state.phone}
+                    placeholder="Enter your phone number"
+                    type="tel"
+                    handleChange={this.handleChange}
+                  />
                 </fieldset>
                 <fieldset>
                   <div className="custom-row">
@@ -134,6 +109,7 @@ class CheckoutForm extends Component {
                   <span className="message">{this.state.errorMessage}</span>
                 </div>
               </form>
+
               <div className="success">
                 <div className="icon">
                   <SuccessIcon />
