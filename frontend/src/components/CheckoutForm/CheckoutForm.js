@@ -58,11 +58,6 @@ class CheckoutForm extends Component {
     return (
       <div className="globalCheckoutContainer">
         <main>
-          <div className="stripes">
-            <div className="stripe s1" />
-            <div className="stripe s2" />
-            <div className="stripe s3" />
-          </div>
           <section className="custom-container-lg">
             <div
               className={`cell example example1  ${this.state.submitting && 'submitting'} ${this.state.submitted &&
