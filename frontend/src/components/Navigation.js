@@ -2,27 +2,16 @@ import React, { Component } from 'react';
 import { withRouter, NavLink } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { removeUser } from '../actions/userActions';
-import {
-  Collapse,
-  Navbar,
-  NavbarToggler,
-  NavbarBrand,
-  Nav,
-  NavItem,
-  UncontrolledDropdown,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem,
-} from 'reactstrap';
+import { Collapse, Navbar, NavbarToggler, NavbarBrand, Nav, NavItem } from 'reactstrap';
 
 class Navigation extends Component {
   state = { isOpen: false };
 
   toggle = () => this.setState({ isOpen: !this.state.isOpen });
 
-  isLoggedIn = Object.keys(this.props.user).length === 0;
-
   render() {
+    const isLoggedIn = Object.keys(this.props.user).length !== 0;
+
     return (
       <div>
         <Navbar color="dark" dark expand="md">
@@ -34,18 +23,12 @@ class Navigation extends Component {
             <Collapse isOpen={this.state.isOpen} navbar>
               <Nav className="ml-auto" navbar>
                 <NavItem>
-                  <span className="nav-link" to="/" onClick={() => console.log(this.isLoggedIn)}>
-                    {this.isLoggedIn.toString()}
-                  </span>
-                </NavItem>
-
-                <NavItem>
                   <NavLink className="nav-link" exact to="/">
                     Home
                   </NavLink>
                 </NavItem>
 
-                {this.isLoggedIn && (
+                {!isLoggedIn && (
                   <NavItem>
                     <NavLink className="nav-link" to="/register">
                       Register
@@ -53,7 +36,7 @@ class Navigation extends Component {
                   </NavItem>
                 )}
 
-                {this.isLoggedIn && (
+                {!isLoggedIn && (
                   <NavItem>
                     <NavLink className="nav-link" to="/login">
                       Login
@@ -61,7 +44,7 @@ class Navigation extends Component {
                   </NavItem>
                 )}
 
-                {!this.isLoggedIn && (
+                {isLoggedIn && (
                   <NavItem>
                     <NavLink
                       className="nav-link"
@@ -79,36 +62,6 @@ class Navigation extends Component {
             </Collapse>
           </div>
         </Navbar>
-
-        {/* <ul className="navbar1">
-          <img src="https://luxexpress.eu/sites/all/themes/lux/logo.png" className="logo" alt="logo" />
-          <li>
-            <NavLink to="/">Home</NavLink>
-          </li>
-          {isLoggedIn && (
-            <li>
-              <NavLink to="/register">Register</NavLink>
-            </li>
-          )}
-          {isLoggedIn && (
-            <li>
-              <NavLink to="/login">Login</NavLink>
-            </li>
-          )}
-          {!isLoggedIn && (
-            <li>
-              <NavLink
-                to="#"
-                onClick={() => {
-                  props.removeUser();
-                  props.history.push('/login');
-                }}
-              >
-                Log Out
-              </NavLink>
-            </li>
-          )}
-        </ul> */}
       </div>
     );
   }
