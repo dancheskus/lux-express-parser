@@ -6,7 +6,6 @@ import moment from 'moment';
 import 'react-dates/initialize';
 import 'react-dates/lib/css/_datepicker.css';
 import { NavLink } from 'react-router-dom';
-import { Button } from 'reactstrap';
 
 import DatePicker from './DatePicker';
 import SearchStop from './SearchStop';
