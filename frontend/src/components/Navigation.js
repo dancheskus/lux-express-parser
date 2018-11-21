@@ -38,8 +38,9 @@ class Navigation extends Component {
                     {this.isLoggedIn.toString()}
                   </span>
                 </NavItem>
+
                 <NavItem>
-                  <NavLink className="nav-link" to="/">
+                  <NavLink className="nav-link" exact to="/">
                     Home
                   </NavLink>
                 </NavItem>
@@ -51,6 +52,7 @@ class Navigation extends Component {
                     </NavLink>
                   </NavItem>
                 )}
+
                 {this.isLoggedIn && (
                   <NavItem>
                     <NavLink className="nav-link" to="/login">
