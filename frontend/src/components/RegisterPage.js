@@ -14,6 +14,7 @@ class RegisterPage extends Component {
   handleChange = e => {
     this.setState({ [e.target.name]: e.target.value });
   };
+
   registerPressed = e => {
     e.preventDefault();
     axios
@@ -30,6 +31,7 @@ class RegisterPage extends Component {
         console.log(response.data.message);
       });
   };
+
   render() {
     return (
       <div className="login-page">

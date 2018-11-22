@@ -4,6 +4,7 @@ import MainSearchEngine from './components/MainSearchEngine';
 import TicketPage from './components/TicketPage';
 import LoginPage from './components/LoginPage';
 import RegisterPage from './components/RegisterPage';
+import LoginRegisterPage from './components/LoginRegisterPage';
 import PageNotFound from './components/PageNotFound';
 import Navigation from './components/Navigation';
 import HOCCheckout from './components/CheckoutForm/index';
@@ -19,6 +20,7 @@ class App extends Component {
           <Switch>
             <Route path="/login" component={LoginPage} exact />
             <Route path="/register" component={RegisterPage} exact />
+            <Route path="/logreg" component={LoginRegisterPage} exact />
             <Route
               path="/results"
               render={() => (this.props.tickets.length ? <TicketPage /> : <Redirect to="/" />)}
