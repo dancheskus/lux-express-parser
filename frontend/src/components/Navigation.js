@@ -7,6 +7,14 @@ import { Collapse, Navbar, NavbarToggler, NavbarBrand, Nav, NavItem } from 'reac
 class Navigation extends Component {
   state = { isOpen: false };
 
+  NavLink = ({ to, name }) => (
+    <NavItem>
+      <NavLink className="nav-link" to={to} onClick={() => this.setState({ isOpen: false })}>
+        {name}
+      </NavLink>
+    </NavItem>
+  );
+
   toggle = () => this.setState({ isOpen: !this.state.isOpen });
 
   render() {
@@ -22,11 +30,7 @@ class Navigation extends Component {
 
             <Collapse isOpen={this.state.isOpen} navbar>
               <Nav className="ml-auto" navbar>
-                <NavItem>
-                  <NavLink className="nav-link" to="/logreg">
-                    LogReg
-                  </NavLink>
-                </NavItem>
+                <this.NavLink name="LogReg" to="/logreg" />
 
                 <NavItem>
                   <NavLink className="nav-link" exact to="/">

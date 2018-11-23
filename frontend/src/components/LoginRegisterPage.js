@@ -7,6 +7,85 @@ import { Form, FormGroup, Input, FormFeedback, Button, Col, Container, Row } fro
 import styled from 'styled-components';
 import BGimage from '../img/background-login.jpg';
 
+const StyledContainer = styled(Container)`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+`;
+
+const Background = styled.div`
+  background: url(${BGimage}) center no-repeat;
+  height: 100%;
+  background-size: cover;
+`;
+
+const StyledForm = styled(Form)`
+  .bg-white {
+    border-radius: 10px;
+  }
+
+  .form-group {
+    margin: 0;
+
+    input {
+      padding: 25px;
+      border: none;
+      border-radius: 0;
+      border-bottom: 1px solid #ced4da;
+
+      &.is-valid {
+        background: rgba(101, 219, 101, 0.24);
+        border: 1px solid green;
+      }
+
+      &.is-invalid {
+        background: rgba(248, 122, 122, 0.24);
+        border: 1px solid red;
+      }
+    }
+
+    &:first-of-type input {
+      border-radius: 10px 10px 0 0;
+    }
+
+    &:last-of-type input {
+      border-radius: 0 0 10px 10px;
+      border-bottom: 0;
+    }
+  }
+
+  button {
+    margin-top: 70px;
+    padding: 12.5px;
+    border: none;
+    transition: transform 0.2s;
+    border-radius: 7px;
+
+    &:hover {
+      transform: translateY(-2px);
+    }
+
+    &.main-button {
+      background: rgb(72, 172, 152);
+
+      &:hover {
+        background: rgb(72, 172, 152);
+      }
+    }
+
+    &.second-button {
+      margin-top: 20px;
+      background: #fff;
+      color: rgb(72, 172, 152);
+
+      &:hover {
+        background: #fff;
+      }
+    }
+  }
+`;
+
 class LoginRegisterPage extends Component {
   state = {
     username: '',
@@ -38,116 +117,55 @@ class LoginRegisterPage extends Component {
     // eslint-disable-next-line
     const emailRegex = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
 
-    const StyledContainer = styled(Container)`
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-    `;
-
-    const Background = styled.div`
-      background: url(${BGimage}) center no-repeat;
-      height: 100vh;
-      background-size: cover;
-    `;
-
-    const StyledForm = styled(Form)`
-      .form-group {
-        margin: 0;
-
-        input {
-          padding: 25px;
-          border: none;
-          border-radius: 0;
-          border-bottom: 1px solid #ced4da;
-        }
-
-        &:first-of-type input {
-          border-radius: 10px 10px 0 0;
-        }
-
-        &:last-of-type input {
-          border-radius: 0 0 10px 10px;
-          border-bottom: 0;
-        }
-      }
-
-      button {
-        margin-top: 70px;
-        padding: 12.5px;
-        border: none;
-        transition: transform 0.2s;
-
-        &:hover {
-          transform: translateY(-2px);
-        }
-      }
-
-      .main-button {
-        background: rgb(72, 172, 152);
-
-        &:hover {
-          background: rgb(72, 172, 152);
-        }
-      }
-
-      .second-button {
-        background: #fff;
-        color: rgb(72, 172, 152);
-
-        &:hover {
-          background: #fff;
-        }
-      }
-    `;
-
     return (
       <Background>
         <StyledContainer>
           <Row>
             <Col md={{ size: 4, offset: 4 }}>
               <StyledForm>
-                <FormGroup>
-                  <Input
-                    valid
-                    name="username"
-                    placeholder="Имя пользователя"
-                    value={this.state.username}
-                    onChange={this.handleChange}
-                  />
-                  <FormFeedback tooltip>Имя уже занято</FormFeedback>
-                </FormGroup>
+                <div className="bg-white">
+                  <FormGroup>
+                    <Input
+                      name="username"
+                      placeholder="Имя пользователя"
+                      value={this.state.username}
+                      onChange={this.handleChange}
+                    />
+                    <FormFeedback tooltip>Имя уже занято</FormFeedback>
+                  </FormGroup>
 
-                <FormGroup>
-                  <Input
-                    name="email"
-                    type="email"
-                    placeholder="Email"
-                    value={this.state.email}
-                    onChange={this.handleChange}
-                  />
-                  <FormFeedback tooltip>Email уже занят</FormFeedback>
-                </FormGroup>
+                  <FormGroup>
+                    <Input
+                      name="email"
+                      type="email"
+                      placeholder="Email"
+                      value={this.state.email}
+                      onChange={this.handleChange}
+                    />
+                    <FormFeedback tooltip>Email уже занят</FormFeedback>
+                  </FormGroup>
 
-                <FormGroup>
-                  <Input
-                    name="password"
-                    type="password"
-                    placeholder="Пароль"
-                    value={this.state.password}
-                    onChange={this.handleChange}
-                  />
-                </FormGroup>
+                  <FormGroup>
+                    <Input
+                      valid
+                      name="password"
+                      type="password"
+                      placeholder="Пароль"
+                      value={this.state.password}
+                      onChange={this.handleChange}
+                    />
+                  </FormGroup>
 
-                <FormGroup>
-                  <Input
-                    name="passwordRepeat"
-                    type="password"
-                    placeholder="Повторите пароль"
-                    value={this.state.passwordRepeat}
-                    onChange={this.handleChange}
-                  />
-                </FormGroup>
+                  <FormGroup>
+                    <Input
+                      name="passwordRepeat"
+                      type="password"
+                      placeholder="Повторите пароль"
+                      value={this.state.passwordRepeat}
+                      onChange={this.handleChange}
+                    />
+                  </FormGroup>
+                </div>
 
                 <Button className="main-button" block>
                   Регистрироваться

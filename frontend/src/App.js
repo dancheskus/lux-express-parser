@@ -10,12 +10,17 @@ import Navigation from './components/Navigation';
 import HOCCheckout from './components/CheckoutForm/index';
 import AuthenticatedComponent from './components/AuthenticatedComponent';
 import { connect } from 'react-redux';
+import styled from 'styled-components';
+
+const AppWrapper = styled.div`
+  ${props => (props.vh100 ? `overflow:hidden; height: 100vh;` : ``)}
+`;
 
 class App extends Component {
   render() {
     return (
       <BrowserRouter>
-        <div>
+        <AppWrapper vh100={true}>
           <Navigation />
           <Switch>
             <Route path="/login" component={LoginPage} exact />
@@ -32,7 +37,7 @@ class App extends Component {
 
             <Route component={PageNotFound} />
           </Switch>
-        </div>
+        </AppWrapper>
       </BrowserRouter>
     );
   }
