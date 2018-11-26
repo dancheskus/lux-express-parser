@@ -1,6 +1,7 @@
 const styleReducer = (state = { VH100: false }, action) => {
   const allTypes = {
-    TOGGLE_VH100: () => ({ VH100: !state.VH100 }),
+    VH100_ON: () => ({ VH100: true }),
+    VH100_OFF: () => ({ VH100: false }),
     default: () => state,
   };
   return (allTypes[action.type] || allTypes['default'])();

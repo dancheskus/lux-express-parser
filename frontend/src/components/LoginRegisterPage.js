@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import axios from 'axios';
 
 import { addUser, removeUser } from '../actions/userActions';
-import { toggleVH100 } from '../actions/styleActions';
+import { VH100on, VH100off } from '../actions/styleActions';
 
 import { withRouter } from 'react-router';
 
@@ -106,11 +106,11 @@ class LoginRegisterPage extends Component {
   };
 
   componentDidMount() {
-    this.props.toggleVH100();
+    this.props.VH100on();
   }
 
   componentWillUnmount() {
-    this.props.toggleVH100();
+    this.props.VH100off();
   }
 
   handleChange = e => this.setState({ [e.target.name]: e.target.value });
@@ -207,7 +207,8 @@ const mapDispatchToProps = dispatch => ({
   dispatch,
   addUser: user => dispatch(addUser(user)),
   removeUser: () => dispatch(removeUser()),
-  toggleVH100: () => dispatch(toggleVH100()),
+  VH100on: () => dispatch(VH100on()),
+  VH100off: () => dispatch(VH100off()),
 });
 
 export default withRouter(
