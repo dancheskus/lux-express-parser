@@ -1,10 +1,15 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import axios from 'axios';
+
 import { addUser, removeUser } from '../actions/userActions';
+import { toggleVH100 } from '../actions/styleActions';
+
 import { withRouter } from 'react-router';
-import { Form, FormGroup, Input, FormFeedback, Button, Col, Container, Row } from 'reactstrap';
+
+import { Form, FormGroup, Input, FormFeedback, Col, Container, Row } from 'reactstrap';
 import styled from 'styled-components';
+
 import BGimage from '../img/background-login.jpg';
 
 const StyledContainer = styled(Container)`
@@ -36,12 +41,12 @@ const StyledForm = styled(Form)`
 
       &.is-valid {
         background: rgba(101, 219, 101, 0.24);
-        border: 1px solid green;
+        /* border: 1px solid rgba(101, 219, 101, 0.24); */
       }
 
       &.is-invalid {
         background: rgba(248, 122, 122, 0.24);
-        border: 1px solid red;
+        /* border: 1px solid red; */
       }
     }
 
@@ -68,9 +73,15 @@ const StyledForm = styled(Form)`
 
     &.main-button {
       background: rgb(72, 172, 152);
+      color: #fff;
 
       &:hover {
         background: rgb(72, 172, 152);
+      }
+
+      &:active {
+        background-color: rgb(72, 172, 152);
+        border-color: rgb(72, 172, 152);
       }
     }
 
@@ -93,6 +104,14 @@ class LoginRegisterPage extends Component {
     password: '',
     passwordRepeat: '',
   };
+
+  componentDidMount() {
+    this.props.toggleVH100();
+  }
+
+  componentWillUnmount() {
+    this.props.toggleVH100();
+  }
 
   handleChange = e => this.setState({ [e.target.name]: e.target.value });
 
@@ -147,7 +166,6 @@ class LoginRegisterPage extends Component {
 
                   <FormGroup>
                     <Input
-                      valid
                       name="password"
                       type="password"
                       placeholder="Пароль"
@@ -167,13 +185,9 @@ class LoginRegisterPage extends Component {
                   </FormGroup>
                 </div>
 
-                <Button className="main-button" block>
-                  Регистрироваться
-                </Button>
+                <button className="btn btn-block main-button">Регистрироваться</button>
 
-                <Button className="second-button" block>
-                  Уже есть аккаунт?
-                </Button>
+                <button className="btn btn-block second-button">Уже есть аккаунт?</button>
               </StyledForm>
             </Col>
           </Row>
@@ -191,6 +205,7 @@ const mapDispatchToProps = dispatch => ({
   dispatch,
   addUser: user => dispatch(addUser(user)),
   removeUser: () => dispatch(removeUser()),
+  toggleVH100: () => dispatch(toggleVH100()),
 });
 
 export default withRouter(
