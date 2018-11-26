@@ -48,7 +48,4 @@ class App extends Component {
 
 const mapStateToProps = state => ({ tickets: state.tickets, user: state.user, style: state.style.VH100 });
 
-export default connect(
-  mapStateToProps,
-  dispatch => ({ dispatch })
-)(App);
+export default connect(mapStateToProps)(App);

@@ -6,23 +6,31 @@ import { addUser, removeUser } from '../actions/userActions';
 import { VH100on, VH100off } from '../actions/styleActions';
 
 import { withRouter } from 'react-router';
+import { NavLink } from 'react-router-dom';
 
-import { Form, FormGroup, Input, FormFeedback, Col, Container, Row } from 'reactstrap';
+import { Form, FormGroup, Input, Col, Container, Row, Alert } from 'reactstrap';
 import styled from 'styled-components';
 
 import BGimage from '../img/background-login.jpg';
 
 const StyledContainer = styled(Container)`
-  position: absolute;
+  /* position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%); */
 `;
 
 const Background = styled.div`
   background: url(${BGimage}) center no-repeat;
   height: 100%;
   background-size: cover;
+`;
+
+const FlexCenter = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 80%;
 `;
 
 const StyledForm = styled(Form)`
@@ -103,6 +111,12 @@ class LoginRegisterPage extends Component {
     email: '',
     password: '',
     passwordRepeat: '',
+    passwordNoMatchAlert: false,
+    emailNotCorrectAlert: false,
+    nameAlreadyExistsAlert: false,
+    emailAlreadyExistsAlert: false,
+    emptyFieldsAlert: false,
+    successAlert: true,
   };
 
   componentDidMount() {
@@ -113,10 +127,29 @@ class LoginRegisterPage extends Component {
     this.props.VH100off();
   }
 
+  resetAlerts = () =>
+    this.setState({
+      passwordNoMatchAlert: false,
+      emailNotCorrectAlert: false,
+      nameAlreadyExistsAlert: false,
+      emailAlreadyExistsAlert: false,
+      emptyFieldsAlert: false,
+      successAlert: false,
+    });
+  closeSuccessAlert = () => this.setState({ successAlert: false });
+  closePasswordNoMatchAlert = () => this.setState({ passwordNoMatchAlert: false });
+  closeEmailNotCorrectAlert = () => this.setState({ emailNotCorrectAlert: false });
+
   handleChange = e => this.setState({ [e.target.name]: e.target.value });
 
   registerPressed = e => {
     e.preventDefault();
+
+    if (!this.state.username || !this.state.email || !this.state.password || !this.state.passwordRepeat)
+      return console.log('Не все поля заполнены');
+
+    if (this.state.password !== this.state.passwordRepeat) return console.log('Пароли не совпадают');
+
     axios
       .post(`${process.env.REACT_APP_BACKEND_URL}/register`, {
         username: this.state.username,
@@ -138,62 +171,107 @@ class LoginRegisterPage extends Component {
 
     return (
       <Background>
-        <StyledContainer>
+        {/*       passwordNoMatch: false,
+      emailNotCorrect: false,
+      nameAlreadyExists: false,
+      emailAlreadyExists: false,
+      success: false, */}
+
+        {/* СООБЩЕНИЯ */}
+        <Container>
           <Row>
-            <Col md={{ size: 4, offset: 4 }}>
-              <StyledForm>
-                <div className="bg-white">
-                  <FormGroup>
-                    <Input
-                      name="username"
-                      placeholder="Имя пользователя"
-                      value={this.state.username}
-                      onChange={this.handleChange}
-                    />
-                    <FormFeedback tooltip>Имя уже занято</FormFeedback>
-                  </FormGroup>
+            <Col className="text-center" md={{ size: 6, offset: 3 }}>
+              {/* --------------имя */}
+              {/* --------------email */}
+              {/* <Alert isOpen={this.state.notification} toggle={this.setState({notification: null})} color={this.state.notification.type}>
+                {this.state.notification.message}
+              </Alert> */}
 
-                  <FormGroup>
-                    <Input
-                      valid={!!this.state.email.match(emailRegex)}
-                      invalid={this.state.email.length > 3 && !this.state.email.match(emailRegex)}
-                      name="email"
-                      type="email"
-                      placeholder="Email"
-                      value={this.state.email}
-                      onChange={this.handleChange}
-                    />
-                    <FormFeedback tooltip>Неправильный формат email</FormFeedback>
-                  </FormGroup>
+              <Alert isOpen={this.state.emailNotCorrectAlert} toggle={this.closeEmailNotCorrectAlert} color="danger">
+                Email введен некорректно.
+              </Alert>
+              {/* --------------успех */}
+              <Alert isOpen={this.state.successAlert} toggle={this.closeSuccessAlert} color="success">
+                Вы успешно зарегестрированы.{' '}
+                <NavLink className="alert-link" to="/login">
+                  Войдите
+                </NavLink>{' '}
+                в свою учетную запись.
+              </Alert>
 
-                  <FormGroup>
-                    <Input
-                      name="password"
-                      type="password"
-                      placeholder="Пароль"
-                      value={this.state.password}
-                      onChange={this.handleChange}
-                    />
-                  </FormGroup>
-
-                  <FormGroup>
-                    <Input
-                      name="passwordRepeat"
-                      type="password"
-                      placeholder="Повторите пароль"
-                      value={this.state.passwordRepeat}
-                      onChange={this.handleChange}
-                    />
-                  </FormGroup>
-                </div>
-
-                <button className="btn btn-block main-button">Регистрироваться</button>
-
-                <button className="btn btn-block second-button">Уже есть аккаунт?</button>
-              </StyledForm>
+              {/* --------------пароль */}
+              <Alert isOpen={this.state.passwordNoMatchAlert} toggle={this.closePasswordNoMatchAlert} color="danger">
+                Пароли не совпали. Повторите попытку.
+              </Alert>
             </Col>
           </Row>
-        </StyledContainer>
+        </Container>
+
+        <FlexCenter>
+          <StyledContainer>
+            <Row>
+              <Col md={{ size: 4, offset: 4 }}>
+                <StyledForm>
+                  <div className="bg-white">
+                    <FormGroup>
+                      <Input
+                        name="username"
+                        placeholder="Имя пользователя"
+                        value={this.state.username}
+                        onChange={this.handleChange}
+                      />
+                    </FormGroup>
+
+                    <FormGroup>
+                      <Input
+                        valid={!!this.state.email.match(emailRegex)}
+                        name="email"
+                        type="email"
+                        placeholder="Email"
+                        value={this.state.email}
+                        onChange={this.handleChange}
+                        onBlur={e => {
+                          this.resetAlerts();
+                          return !!this.state.email.match(emailRegex)
+                            ? (e.target.classList.add('is-valid'), e.target.classList.remove('is-invalid'))
+                            : (e.target.classList.remove('is-valid'),
+                              e.target.classList.add('is-invalid'),
+                              this.setState({ emailNotCorrectAlert: true }));
+                        }}
+                      />
+                    </FormGroup>
+
+                    <FormGroup>
+                      <Input
+                        name="password"
+                        type="password"
+                        placeholder="Пароль"
+                        value={this.state.password}
+                        onChange={this.handleChange}
+                      />
+                    </FormGroup>
+
+                    <FormGroup>
+                      <Input
+                        name="passwordRepeat"
+                        type="password"
+                        placeholder="Повторите пароль"
+                        value={this.state.passwordRepeat}
+                        onChange={this.handleChange}
+                      />
+                    </FormGroup>
+                  </div>
+
+                  <button onClick={this.registerPressed} className="btn btn-block main-button">
+                    Регистрироваться
+                  </button>
+
+                  <button className="btn btn-block second-button">Уже есть аккаунт?</button>
+                </StyledForm>
+              </Col>
+            </Row>
+          </StyledContainer>
+        </FlexCenter>
       </Background>
     );
   }
