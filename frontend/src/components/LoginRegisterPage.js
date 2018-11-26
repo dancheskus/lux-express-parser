@@ -155,13 +155,15 @@ class LoginRegisterPage extends Component {
 
                   <FormGroup>
                     <Input
+                      valid={!!this.state.email.match(emailRegex)}
+                      invalid={this.state.email.length > 3 && !this.state.email.match(emailRegex)}
                       name="email"
                       type="email"
                       placeholder="Email"
                       value={this.state.email}
                       onChange={this.handleChange}
                     />
-                    <FormFeedback tooltip>Email уже занят</FormFeedback>
+                    <FormFeedback tooltip>Неправильный формат email</FormFeedback>
                   </FormGroup>
 
                   <FormGroup>
