@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import axios from 'axios';
 
@@ -111,12 +111,7 @@ class LoginRegisterPage extends Component {
     email: '',
     password: '',
     passwordRepeat: '',
-    passwordNoMatchAlert: false,
-    emailNotCorrectAlert: false,
-    nameAlreadyExistsAlert: false,
-    emailAlreadyExistsAlert: false,
-    emptyFieldsAlert: false,
-    successAlert: true,
+    notification: null,
   };
 
   componentDidMount() {
@@ -183,30 +178,53 @@ class LoginRegisterPage extends Component {
             <Col className="text-center" md={{ size: 6, offset: 3 }}>
               {/* --------------имя */}
               {/* --------------email */}
-              {/* <Alert isOpen={this.state.notification} toggle={this.setState({notification: null})} color={this.state.notification.type}>
-                {this.state.notification.message}
-              </Alert> */}
-
-              <Alert isOpen={this.state.emailNotCorrectAlert} toggle={this.closeEmailNotCorrectAlert} color="danger">
-                Email введен некорректно.
+              <Alert
+                isOpen={!!this.state.notification}
+                toggle={() => this.setState({ notification: null })}
+                color={this.state.notification && this.state.notification.type}
+              >
+                {this.state.notification && this.state.notification.message}
               </Alert>
+
+              {/* <Alert isOpen={this.state.emailNotCorrectAlert} toggle={this.closeEmailNotCorrectAlert} color="danger">
+                Email введен некорректно.
+              </Alert> */}
               {/* --------------успех */}
-              <Alert isOpen={this.state.successAlert} toggle={this.closeSuccessAlert} color="success">
+              {/* <Alert isOpen={this.state.successAlert} toggle={this.closeSuccessAlert} color="success">
                 Вы успешно зарегестрированы.{' '}
                 <NavLink className="alert-link" to="/login">
                   Войдите
                 </NavLink>{' '}
                 в свою учетную запись.
-              </Alert>
+              </Alert> */}
 
               {/* --------------пароль */}
-              <Alert isOpen={this.state.passwordNoMatchAlert} toggle={this.closePasswordNoMatchAlert} color="danger">
+              {/* <Alert isOpen={this.state.passwordNoMatchAlert} toggle={this.closePasswordNoMatchAlert} color="danger">
                 Пароли не совпали. Повторите попытку.
-              </Alert>
+              </Alert> */}
             </Col>
           </Row>
         </Container>
-
+        <button
+          onClick={() =>
+            this.setState({
+              notification: {
+                message: (
+                  <Fragment>
+                    Вы успешно зарегестрированы.{' '}
+                    <NavLink className="alert-link" to="/login">
+                      Войдите
+                    </NavLink>{' '}
+                    в свою учетную запись.
+                  </Fragment>
+                ),
+                type: 'success',
+              },
+            })
+          }
+        >
+          TEST
+        </button>
         <FlexCenter>
           <StyledContainer>
             <Row>
