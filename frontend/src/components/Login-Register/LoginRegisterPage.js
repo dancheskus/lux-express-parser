@@ -2,110 +2,14 @@ import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import axios from 'axios';
 
-import { addUser, removeUser } from '../actions/userActions';
-import { VH100on, VH100off } from '../actions/styleActions';
+import { addUser, removeUser } from '../../actions/userActions';
+import { VH100on, VH100off } from '../../actions/styleActions';
 
-import { withRouter } from 'react-router';
-import { NavLink } from 'react-router-dom';
+import { NavLink, withRouter } from 'react-router-dom';
 
-import { Form, FormGroup, Input, Col, Container, Row, Alert } from 'reactstrap';
-import styled from 'styled-components';
+import { FormGroup, Input, Col, Container, Row } from 'reactstrap';
 
-import BGimage from '../img/background-login.jpg';
-
-const StyledContainer = styled(Container)`
-  /* position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%); */
-`;
-
-const Background = styled.div`
-  background: url(${BGimage}) center no-repeat;
-  height: 100%;
-  background-size: cover;
-`;
-
-const FlexCenter = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  height: 80%;
-`;
-
-const StyledForm = styled(Form)`
-  .bg-white {
-    border-radius: 10px;
-  }
-
-  .form-group {
-    margin: 0;
-
-    input {
-      padding: 25px;
-      border: none;
-      border-radius: 0;
-      border-bottom: 1px solid #ced4da;
-      box-shadow: none;
-
-      &.is-valid {
-        background: rgba(101, 219, 101, 0.24);
-        /* border: 1px solid rgba(101, 219, 101, 0.24); */
-      }
-
-      &.is-invalid {
-        background: rgba(248, 122, 122, 0.24);
-        /* border: 1px solid red; */
-      }
-    }
-
-    &:first-of-type input {
-      border-radius: 10px 10px 0 0;
-    }
-
-    &:last-of-type input {
-      border-radius: 0 0 10px 10px;
-      border-bottom: 0;
-    }
-  }
-
-  && button {
-    margin-top: 70px;
-    padding: 12.5px;
-    border: none;
-    transition: transform 0.2s;
-    border-radius: 7px;
-    box-shadow: none;
-
-    &:hover {
-      transform: translateY(-2px);
-    }
-
-    &.main-button {
-      background: rgb(72, 172, 152);
-      color: #fff;
-
-      &:hover {
-        background: rgb(72, 172, 152);
-      }
-
-      &:active {
-        background-color: rgb(72, 172, 152);
-        border-color: rgb(72, 172, 152);
-      }
-    }
-
-    &.second-button {
-      margin-top: 20px;
-      background: #fff;
-      color: rgb(72, 172, 152);
-
-      &:hover {
-        background: #fff;
-      }
-    }
-  }
-`;
+import { Background, FlexCenter, StyledForm, StyledContainer, StyledAlert } from './style';
 
 class LoginRegisterPage extends Component {
   state = {
@@ -180,13 +84,17 @@ class LoginRegisterPage extends Component {
             <Col className="text-center" md={{ size: 6, offset: 3 }}>
               {/* --------------имя */}
               {/* --------------email */}
-              <Alert
+              <StyledAlert
                 isOpen={!!this.state.notification}
                 toggle={() => this.setState({ notification: null })}
                 color={this.state.notification && this.state.notification.type}
               >
                 {this.state.notification && this.state.notification.message}
-              </Alert>
+              </StyledAlert>
+
+              {/* <StyledAlert isOpen={true} toggle={() => this.setState({ notification: null })} color="danger">
+                this is my message
+              </StyledAlert> */}
 
               {/* <Alert isOpen={this.state.emailNotCorrectAlert} toggle={this.closeEmailNotCorrectAlert} color="danger">
                 Email введен некорректно.
@@ -207,32 +115,36 @@ class LoginRegisterPage extends Component {
             </Col>
           </Row>
         </Container>
-        <button
-          onClick={() =>
-            this.setState({
-              notification: {
-                message: (
-                  <Fragment>
-                    Вы успешно зарегестрированы.{' '}
-                    <NavLink className="alert-link" to="/login">
-                      Войдите
-                    </NavLink>{' '}
-                    в свою учетную запись.
-                  </Fragment>
-                ),
-                type: 'success',
-              },
-            })
-          }
-        >
-          TEST
-        </button>
+
+        <div>
+          <button
+            onClick={() =>
+              this.setState({
+                notification: {
+                  message: (
+                    <Fragment>
+                      Вы успешно зарегестрированы.{' '}
+                      <NavLink className="alert-link" to="/login">
+                        Войдите
+                      </NavLink>{' '}
+                      в свою учетную запись.
+                    </Fragment>
+                  ),
+                  type: 'success',
+                },
+              })
+            }
+          >
+            TEST
+          </button>
+        </div>
+
         <FlexCenter>
           <StyledContainer>
             <Row>
               <Col md={{ size: 4, offset: 4 }}>
                 <StyledForm>
-                  <div className="bg-white">
+                  <div className="bg-white1">
                     <FormGroup>
                       <Input
                         name="username"

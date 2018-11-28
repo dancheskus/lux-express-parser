@@ -7,8 +7,8 @@ import styleReducer from '../reducers/styleReducer';
 
 export default () => {
   const store = createStore(
-    combineReducers({ tickets: ticketsReducer, user: userReducer, style: styleReducer }),
-    window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+    combineReducers({ tickets: ticketsReducer, user: userReducer, style: styleReducer })
+    // window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
   );
 
   // verifyToken(localStorage.getItem('token'), store.dispatch);

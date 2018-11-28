@@ -5,7 +5,7 @@ import MainSearchEngine from './components/MainSearchEngine';
 import TicketPage from './components/TicketPage';
 import LoginPage from './components/LoginPage';
 import RegisterPage from './components/RegisterPage';
-import LoginRegisterPage from './components/LoginRegisterPage';
+import LoginRegisterPage from './components/Login-Register/LoginRegisterPage';
 import PageNotFound from './components/PageNotFound';
 import Navigation from './components/Navigation';
 import HOCCheckout from './components/CheckoutForm/index';
@@ -16,7 +16,7 @@ import { connect } from 'react-redux';
 import styled from 'styled-components';
 
 const VH100 = styled.div`
-  ${props => (props.vh100 ? `overflow:hidden; height: 100vh;` : ``)}
+  ${props => (props.vh100 ? `height: 100vh; display: flex; flex-direction: column;` : ``)}
 `;
 
 class App extends Component {
