@@ -31,7 +31,7 @@ class LoginPage extends Component {
 
   render() {
     return (
-      <div className="login-page" style={{ height: '100vh' }}>
+      <div className="login-page">
         <form className="login-form">
           <label>Username</label>
           <input type="text" name="username" required value={this.state.username} onChange={this.handleChange} />

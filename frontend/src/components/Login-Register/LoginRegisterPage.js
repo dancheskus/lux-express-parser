@@ -9,7 +9,7 @@ import { NavLink, withRouter } from 'react-router-dom';
 
 import { FormGroup, Input, Col, Container, Row } from 'reactstrap';
 
-import { Background, FlexCenter, StyledForm, StyledContainer, StyledAlert } from './style';
+import { Background, StyledForm, StyledAlert } from './style';
 
 class LoginRegisterPage extends Component {
   state = {
@@ -59,7 +59,21 @@ class LoginRegisterPage extends Component {
       })
       .then(({ data }) => {
         console.log(data.message);
-        this.props.history.push('/login');
+
+        this.setState({
+          notification: {
+            message: (
+              <Fragment>
+                Вы успешно зарегестрированы.{' '}
+                <NavLink className="alert-link" to="/login">
+                  Войдите
+                </NavLink>{' '}
+                в свою учетную запись.
+              </Fragment>
+            ),
+            type: 'success',
+          },
+        });
       })
       .catch(({ response }) => {
         console.log(response.data.message);
@@ -71,7 +85,7 @@ class LoginRegisterPage extends Component {
     const emailRegex = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
 
     return (
-      <Background>
+      <Background className="d-flex flex-column flex-grow-1">
         {/*       passwordNoMatch: false,
       emailNotCorrect: false,
       nameAlreadyExists: false,
@@ -116,7 +130,7 @@ class LoginRegisterPage extends Component {
           </Row>
         </Container>
 
-        <div>
+        {/* <div>
           <button
             onClick={() =>
               this.setState({
@@ -137,14 +151,14 @@ class LoginRegisterPage extends Component {
           >
             TEST
           </button>
-        </div>
+        </div> */}
 
-        <FlexCenter>
-          <StyledContainer>
+        <div className="d-flex flex-grow-1">
+          <Container className="d-flex flex-column justify-content-center">
             <Row>
               <Col md={{ size: 4, offset: 4 }}>
                 <StyledForm>
-                  <div className="bg-white1">
+                  <div className="bg-white rounded">
                     <FormGroup>
                       <Input
                         name="username"
@@ -194,18 +208,18 @@ class LoginRegisterPage extends Component {
                     </FormGroup>
                   </div>
 
-                  <button onClick={this.registerPressed} className="btn btn-block main-button">
+                  <button onClick={this.registerPressed} className="btn btn-block main-button text-white">
                     Регистрироваться
                   </button>
 
-                  <button className="btn btn-block second-button">
-                    <NavLink to="/login">Уже есть аккаунт?</NavLink>
-                  </button>
+                  <NavLink className="btn btn-block second-button bg-white" to="/login">
+                    Уже есть аккаунт?
+                  </NavLink>
                 </StyledForm>
               </Col>
             </Row>
-          </StyledContainer>
-        </FlexCenter>
+          </Container>
+        </div>
       </Background>
     );
   }

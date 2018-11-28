@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import { Form, Container, Alert } from 'reactstrap';
+import { Form, Alert } from 'reactstrap';
 
 import BGimage from '../../img/background-login.jpg';
 
@@ -14,24 +14,11 @@ export const StyledAlert = styled(Alert)`
 export const Background = styled.div`
   background: url(${BGimage}) center no-repeat;
   background-size: cover;
-  flex-grow: 1;
-  display: flex;
-  flex-direction: column;
-`;
-
-export const StyledContainer = styled(Container)`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-`;
-
-export const FlexCenter = styled.div`
-  flex-grow: 1;
-  display: flex;
 `;
 
 export const StyledForm = styled(Form)`
   .bg-white {
+    overflow: hidden;
   }
 
   .form-group {
@@ -54,20 +41,10 @@ export const StyledForm = styled(Form)`
         /* border: 1px solid red; */
       }
     }
-
-    &:first-of-type input {
-      border-top-left-radius: 5px;
-      border-top-right-radius: 5px;
-    }
-
-    &:last-of-type input {
-      border-bottom: 0;
-      border-bottom-left-radius: 5px;
-      border-bottom-right-radius: 5px;
-    }
   }
 
-  && button {
+  && button,
+  a.btn {
     margin-top: 70px;
     padding: 12.5px;
     border: none;
@@ -78,32 +55,18 @@ export const StyledForm = styled(Form)`
       transform: translateY(-2px);
     }
 
+    &:active {
+      transition: transform 0.1s;
+      transform: translateY(-1.3px);
+    }
+
     &.main-button {
       background: rgb(72, 172, 152);
-      color: #fff;
-
-      &:hover {
-        background: rgb(72, 172, 152);
-      }
-
-      &:active {
-        background-color: rgb(72, 172, 152);
-        border-color: rgb(72, 172, 152);
-      }
     }
 
     &.second-button {
       margin-top: 20px;
-      background: #fff;
-
-      & a {
-        color: rgb(72, 172, 152);
-        text-decoration: none;
-      }
-
-      &:hover {
-        background: #fff;
-      }
+      color: rgb(72, 172, 152);
     }
   }
 `;
