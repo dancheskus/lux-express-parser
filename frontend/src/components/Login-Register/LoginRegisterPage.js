@@ -198,7 +198,9 @@ class LoginRegisterPage extends Component {
                     Регистрироваться
                   </button>
 
-                  <button className="btn btn-block second-button">Уже есть аккаунт?</button>
+                  <button className="btn btn-block second-button">
+                    <NavLink to="/login">Уже есть аккаунт?</NavLink>
+                  </button>
                 </StyledForm>
               </Col>
             </Row>

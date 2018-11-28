@@ -95,7 +95,11 @@ export const StyledForm = styled(Form)`
     &.second-button {
       margin-top: 20px;
       background: #fff;
-      color: rgb(72, 172, 152);
+
+      & a {
+        color: rgb(72, 172, 152);
+        text-decoration: none;
+      }
 
       &:hover {
         background: #fff;
