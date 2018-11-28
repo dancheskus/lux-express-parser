@@ -46,6 +46,7 @@ const StyledForm = styled(Form)`
       border: none;
       border-radius: 0;
       border-bottom: 1px solid #ced4da;
+      box-shadow: none;
 
       &.is-valid {
         background: rgba(101, 219, 101, 0.24);
@@ -68,12 +69,13 @@ const StyledForm = styled(Form)`
     }
   }
 
-  button {
+  && button {
     margin-top: 70px;
     padding: 12.5px;
     border: none;
     transition: transform 0.2s;
     border-radius: 7px;
+    box-shadow: none;
 
     &:hover {
       transform: translateY(-2px);
