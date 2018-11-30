@@ -7,9 +7,9 @@ import { VH100on, VH100off } from '../../actions/styleActions';
 
 import { NavLink, withRouter } from 'react-router-dom';
 
-import { FormGroup, Input, Col, Container, Row } from 'reactstrap';
+import { FormGroup, Input, Col, Container, Row, UncontrolledTooltip } from 'reactstrap';
 
-import { Background, StyledForm, StyledAlert } from './style';
+import { Background, StyledForm, StyledAlert, RegisterErrorTooltipStyle } from './style';
 
 class LoginRegisterPage extends Component {
   state = {
@@ -169,6 +169,11 @@ class LoginRegisterPage extends Component {
                     </FormGroup>
 
                     <FormGroup>
+                      <RegisterErrorTooltipStyle id="email-error" visible={true} />
+                      <UncontrolledTooltip placement="right" target="email-error">
+                        Неверный формат email
+                      </UncontrolledTooltip>
+
                       <Input
                         valid={!!this.state.email.match(emailRegex)}
                         name="email"
@@ -188,6 +193,11 @@ class LoginRegisterPage extends Component {
                     </FormGroup>
 
                     <FormGroup>
+                      <RegisterErrorTooltipStyle id="password1-error" visible={true} />
+                      <UncontrolledTooltip placement="right" target="password1-error">
+                        Пароль недостаточно недежный
+                      </UncontrolledTooltip>
+
                       <Input
                         name="password"
                         type="password"
@@ -198,6 +208,11 @@ class LoginRegisterPage extends Component {
                     </FormGroup>
 
                     <FormGroup>
+                      <RegisterErrorTooltipStyle id="password2-error" visible={true} />
+                      <UncontrolledTooltip placement="right" target="password2-error">
+                        Пароли не совпадают
+                      </UncontrolledTooltip>
+
                       <Input
                         name="passwordRepeat"
                         type="password"

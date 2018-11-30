@@ -4,6 +4,40 @@ import { Form, Alert } from 'reactstrap';
 
 import BGimage from '../../img/background-login.jpg';
 
+export const RegisterErrorTooltipStyle = styled.span`
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  right: 10px;
+
+  &:before {
+    content: '';
+    width: 10px;
+    height: 10px;
+    border-radius: 100%;
+    background: rgba(212, 49, 49, 0.699);
+    filter: blur(1px);
+    position: absolute;
+    top: -4px;
+    right: 5px;
+    display: ${props => props.visible === false && 'none'};
+    animation: pulse 2s ease 0s infinite;
+  }
+
+  @keyframes pulse {
+    0% {
+      transform: scale(1);
+    }
+
+    50% {
+      transform: scale(1.2);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+`;
+
 export const StyledAlert = styled(Alert)`
   position: absolute;
   top: 10px;
