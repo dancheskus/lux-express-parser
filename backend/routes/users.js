@@ -27,11 +27,11 @@ router.post('/login', async (req, res) => {
   try {
     const user = await User.findOne({ email: req.body.email });
     if (!bcrypt.compareSync(req.body.password, user.password))
-      return res.status(400).json({ message: 'Not authorized' });
+      return res.status(400).json({ message: 'Email или пароль неверны' });
     const token = jwt.sign({ id: user.id }, process.env.SECRET_KEY); //, { expiresIn: '10s' });
     res.json({ user, token });
   } catch (e) {
-    res.status(400).json({ message: 'Not authorized' });
+    res.status(400).json({ message: 'Email или пароль неверны' });
   }
 });
 

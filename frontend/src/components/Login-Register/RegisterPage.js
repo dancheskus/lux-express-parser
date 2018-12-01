@@ -2,7 +2,6 @@ import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import axios from 'axios';
 
-import { addUser, removeUser } from '../../actions/userActions';
 import { VH100on, VH100off } from '../../actions/styleActions';
 
 import { NavLink, withRouter } from 'react-router-dom';
@@ -21,11 +20,11 @@ class LoginRegisterPage extends Component {
     password: '',
     passwordRepeat: '',
     notification: null,
-    nameInputError: null, //'Поле не должно быть пустым'
+    nameInputError: null,
     surInputError: null,
-    emailInputError: null, //'Неверный формат email'
-    password1InputError: null, //'Пароль недостаточно недежный'
-    password2InputError: null, //'Пароли не совпадают'
+    emailInputError: null,
+    password1InputError: null,
+    password2InputError: null,
   };
 
   state = this.initialState;
@@ -63,7 +62,6 @@ class LoginRegisterPage extends Component {
         password: this.state.password,
       })
       .then(({ data }) => {
-        console.log(data.message);
         this.setState({
           ...this.initialState,
           notification: {
@@ -99,7 +97,6 @@ class LoginRegisterPage extends Component {
         <Container>
           <Row>
             <Col className="text-center" md={{ size: 6, offset: 3 }}>
-              {/* ALERT */}
               <StyledAlert
                 isOpen={!!this.state.notification}
                 toggle={() => this.setState({ notification: null })}
@@ -110,29 +107,6 @@ class LoginRegisterPage extends Component {
             </Col>
           </Row>
         </Container>
-
-        {/* <div>
-          <button
-            onClick={() =>
-              this.setState({
-                notification: {
-                  message: (
-                    <Fragment>
-                      Вы успешно зарегестрированы.{' '}
-                      <NavLink className="alert-link" to="/login">
-                        Войдите
-                      </NavLink>{' '}
-                      в свою учетную запись.
-                    </Fragment>
-                  ),
-                  type: 'success',
-                },
-              })
-            }
-          >
-            TEST
-          </button>
-        </div> */}
 
         <div className="d-flex flex-grow-1">
           <Container className="d-flex flex-column justify-content-center">
@@ -177,8 +151,6 @@ class LoginRegisterPage extends Component {
                               email: this.state.email,
                             })
                             .then(({ data }) => {
-                              console.log(data);
-
                               this.setState({
                                 emailInputError: data.emailAlreadyRegistered === true ? 'Этот email уже занят' : null,
                               });
@@ -256,8 +228,6 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   dispatch,
-  addUser: user => dispatch(addUser(user)),
-  removeUser: () => dispatch(removeUser()),
   VH100on: () => dispatch(VH100on()),
   VH100off: () => dispatch(VH100off()),
 });

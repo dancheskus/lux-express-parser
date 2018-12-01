@@ -24,24 +24,24 @@ class Navigation extends Component {
       <div>
         <Navbar color="dark" dark expand="md">
           <div className="container">
-            <NavbarBrand href="#">LuxSearch</NavbarBrand>
+            <NavLink className="navbar-brand" exact to="/">
+              LuxSearch
+            </NavLink>
 
             <NavbarToggler onClick={this.toggle} />
 
             <Collapse isOpen={this.state.isOpen} navbar>
               <Nav className="ml-auto" navbar>
-                <this.NavLink name="LogReg" to="/logreg" />
-
                 <NavItem>
                   <NavLink className="nav-link" exact to="/">
-                    Home
+                    Домашняя
                   </NavLink>
                 </NavItem>
 
                 {!isLoggedIn && (
                   <NavItem>
                     <NavLink className="nav-link" to="/register">
-                      Register
+                      Регистрация
                     </NavLink>
                   </NavItem>
                 )}
@@ -49,7 +49,7 @@ class Navigation extends Component {
                 {!isLoggedIn && (
                   <NavItem>
                     <NavLink className="nav-link" to="/login">
-                      Login
+                      Вход
                     </NavLink>
                   </NavItem>
                 )}
@@ -64,7 +64,7 @@ class Navigation extends Component {
                         this.props.history.push('/login');
                       }}
                     >
-                      Log Out
+                      Выход
                     </NavLink>
                   </NavItem>
                 )}
