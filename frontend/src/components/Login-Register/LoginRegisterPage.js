@@ -219,6 +219,16 @@ class LoginRegisterPage extends Component {
                         placeholder="Повторите пароль*"
                         value={this.state.passwordRepeat}
                         onChange={this.handleChange}
+                        onBlur={() =>
+                          this.setState({
+                            password2InputError:
+                              this.state.password.length >= 1 &&
+                              this.state.passwordRepeat.length >= 1 &&
+                              this.state.password !== this.state.passwordRepeat
+                                ? 'Пароли не совпадают'
+                                : null,
+                          })
+                        }
                       />
                     </FormGroup>
                   </div>
