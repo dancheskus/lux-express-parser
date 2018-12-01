@@ -7,20 +7,22 @@ import BGimage from '../../img/background-login.jpg';
 export const RegisterErrorTooltipStyle = styled.span`
   position: absolute;
   top: 50%;
+  width: 10px;
+  height: 10px;
   transform: translateY(-50%);
   right: 10px;
+  display: ${props => props.visible === false && 'none'};
 
   &:before {
     content: '';
-    width: 10px;
-    height: 10px;
+    width: 100%;
+    height: 100%;
     border-radius: 100%;
     background: rgba(212, 49, 49, 0.699);
     filter: blur(1px);
     position: absolute;
-    top: -4px;
-    right: 5px;
-    display: ${props => props.visible === false && 'none'};
+    top: 0;
+    right: 0;
     animation: pulse 2s ease 0s infinite;
   }
 
@@ -64,16 +66,6 @@ export const StyledForm = styled(Form)`
       border-bottom: 1px solid #ced4da;
       box-shadow: none;
       border-radius: 0;
-
-      &.is-valid {
-        background: rgba(101, 219, 101, 0.24);
-        /* border: 1px solid rgba(101, 219, 101, 0.24); */
-      }
-
-      &.is-invalid {
-        background: rgba(248, 122, 122, 0.24);
-        /* border: 1px solid red; */
-      }
     }
   }
 

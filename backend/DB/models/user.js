@@ -2,9 +2,13 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 
 const UserSchema = new mongoose.Schema({
-  username: {
+  name: {
     type: String,
-    unique: true,
+    trim: true,
+    required: true,
+  },
+  surname: {
+    type: String,
     trim: true,
     required: true,
   },
@@ -13,10 +17,17 @@ const UserSchema = new mongoose.Schema({
     unique: true,
     trim: true,
     required: true,
+    validate: {
+      validator: name =>
+        name.match(
+          /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
+        ),
+      message: 'emailValidationError',
+    },
   },
   password: {
     type: String,
-    minlength: 1,
+    minlength: 6,
     required: true,
   },
   payedUntil: {

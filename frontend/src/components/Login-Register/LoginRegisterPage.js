@@ -7,18 +7,28 @@ import { VH100on, VH100off } from '../../actions/styleActions';
 
 import { NavLink, withRouter } from 'react-router-dom';
 
-import { FormGroup, Input, Col, Container, Row, UncontrolledTooltip } from 'reactstrap';
+import { FormGroup, Input, Col, Container, Row } from 'reactstrap';
 
-import { Background, StyledForm, StyledAlert, RegisterErrorTooltipStyle } from './style';
+import { Background, StyledForm, StyledAlert } from './style';
+
+import ErrorTooltip from './ErrorTooltip';
 
 class LoginRegisterPage extends Component {
-  state = {
-    username: '',
+  initialState = {
+    name: '',
+    surname: '',
     email: '',
     password: '',
     passwordRepeat: '',
     notification: null,
+    nameInputError: null, //'Поле не должно быть пустым'
+    surInputError: null,
+    emailInputError: null, //'Неверный формат email'
+    password1InputError: null, //'Пароль недостаточно недежный'
+    password2InputError: null, //'Пароли не совпадают'
   };
+
+  state = this.initialState;
 
   componentDidMount() {
     this.props.VH100on();
@@ -28,39 +38,34 @@ class LoginRegisterPage extends Component {
     this.props.VH100off();
   }
 
-  resetAlerts = () =>
-    this.setState({
-      passwordNoMatchAlert: false,
-      emailNotCorrectAlert: false,
-      nameAlreadyExistsAlert: false,
-      emailAlreadyExistsAlert: false,
-      emptyFieldsAlert: false,
-      successAlert: false,
-    });
-  closeSuccessAlert = () => this.setState({ successAlert: false });
-  closePasswordNoMatchAlert = () => this.setState({ passwordNoMatchAlert: false });
-  closeEmailNotCorrectAlert = () => this.setState({ emailNotCorrectAlert: false });
-
   handleChange = e => this.setState({ [e.target.name]: e.target.value });
 
   registerPressed = e => {
     e.preventDefault();
 
-    if (!this.state.username || !this.state.email || !this.state.password || !this.state.passwordRepeat)
-      return console.log('Не все поля заполнены');
+    if (
+      !this.state.name ||
+      !this.state.surname ||
+      !this.state.email ||
+      !this.state.password ||
+      !this.state.passwordRepeat
+    )
+      return this.setState({ notification: { message: 'Заполните все поля', type: 'danger' } });
 
-    if (this.state.password !== this.state.passwordRepeat) return console.log('Пароли не совпадают');
+    if (this.state.password !== this.state.passwordRepeat)
+      return this.setState({ password2InputError: 'Пароли не совпадают' });
 
     axios
       .post(`${process.env.REACT_APP_BACKEND_URL}/register`, {
-        username: this.state.username,
+        name: this.state.name,
+        surname: this.state.surname,
         email: this.state.email,
         password: this.state.password,
       })
       .then(({ data }) => {
         console.log(data.message);
-
         this.setState({
+          ...this.initialState,
           notification: {
             message: (
               <Fragment>
@@ -76,7 +81,12 @@ class LoginRegisterPage extends Component {
         });
       })
       .catch(({ response }) => {
-        console.log(response.data.message);
+        this.setState({
+          notification: {
+            message: response.data.message,
+            type: 'danger',
+          },
+        });
       });
   };
 
@@ -86,18 +96,10 @@ class LoginRegisterPage extends Component {
 
     return (
       <Background className="d-flex flex-column flex-grow-1">
-        {/*       passwordNoMatch: false,
-      emailNotCorrect: false,
-      nameAlreadyExists: false,
-      emailAlreadyExists: false,
-      success: false, */}
-
-        {/* СООБЩЕНИЯ */}
         <Container>
           <Row>
             <Col className="text-center" md={{ size: 6, offset: 3 }}>
-              {/* --------------имя */}
-              {/* --------------email */}
+              {/* ALERT */}
               <StyledAlert
                 isOpen={!!this.state.notification}
                 toggle={() => this.setState({ notification: null })}
@@ -105,27 +107,6 @@ class LoginRegisterPage extends Component {
               >
                 {this.state.notification && this.state.notification.message}
               </StyledAlert>
-
-              {/* <StyledAlert isOpen={true} toggle={() => this.setState({ notification: null })} color="danger">
-                this is my message
-              </StyledAlert> */}
-
-              {/* <Alert isOpen={this.state.emailNotCorrectAlert} toggle={this.closeEmailNotCorrectAlert} color="danger">
-                Email введен некорректно.
-              </Alert> */}
-              {/* --------------успех */}
-              {/* <Alert isOpen={this.state.successAlert} toggle={this.closeSuccessAlert} color="success">
-                Вы успешно зарегестрированы.{' '}
-                <NavLink className="alert-link" to="/login">
-                  Войдите
-                </NavLink>{' '}
-                в свою учетную запись.
-              </Alert> */}
-
-              {/* --------------пароль */}
-              {/* <Alert isOpen={this.state.passwordNoMatchAlert} toggle={this.closePasswordNoMatchAlert} color="danger">
-                Пароли не совпали. Повторите попытку.
-              </Alert> */}
             </Col>
           </Row>
         </Container>
@@ -160,63 +141,82 @@ class LoginRegisterPage extends Component {
                 <StyledForm>
                   <div className="bg-white rounded">
                     <FormGroup>
+                      <ErrorTooltip content={this.state.nameInputError} />
+
+                      <Input name="name" placeholder="Имя*" value={this.state.name} onChange={this.handleChange} />
+                    </FormGroup>
+
+                    <FormGroup>
+                      <ErrorTooltip content={this.state.surnameInputError} />
+
                       <Input
-                        name="username"
-                        placeholder="Имя пользователя"
-                        value={this.state.username}
+                        name="surname"
+                        placeholder="Фамилия*"
+                        value={this.state.surname}
                         onChange={this.handleChange}
                       />
                     </FormGroup>
 
                     <FormGroup>
-                      <RegisterErrorTooltipStyle id="email-error" visible={true} />
-                      <UncontrolledTooltip placement="right" target="email-error">
-                        Неверный формат email
-                      </UncontrolledTooltip>
+                      <ErrorTooltip content={this.state.emailInputError} />
 
                       <Input
-                        valid={!!this.state.email.match(emailRegex)}
                         name="email"
                         type="email"
-                        placeholder="Email"
+                        placeholder="Email*"
                         value={this.state.email}
                         onChange={this.handleChange}
-                        onBlur={e => {
-                          this.resetAlerts();
-                          return !!this.state.email.match(emailRegex)
-                            ? (e.target.classList.add('is-valid'), e.target.classList.remove('is-invalid'))
-                            : (e.target.classList.remove('is-valid'),
-                              e.target.classList.add('is-invalid'),
-                              this.setState({ emailNotCorrectAlert: true }));
+                        onBlur={() => {
+                          if (this.state.email.length >= 1 && !this.state.email.match(emailRegex))
+                            return this.setState({
+                              emailInputError: 'Неверный формат email',
+                            });
+
+                          axios
+                            .post(`${process.env.REACT_APP_BACKEND_URL}/checkEmail`, {
+                              email: this.state.email,
+                            })
+                            .then(({ data }) => {
+                              console.log(data);
+
+                              this.setState({
+                                emailInputError: data.emailAlreadyRegistered === true ? 'Этот email уже занят' : null,
+                              });
+                            })
+                            .catch(({ response }) => {
+                              console.log(response);
+                            });
                         }}
                       />
                     </FormGroup>
 
                     <FormGroup>
-                      <RegisterErrorTooltipStyle id="password1-error" visible={true} />
-                      <UncontrolledTooltip placement="right" target="password1-error">
-                        Пароль недостаточно недежный
-                      </UncontrolledTooltip>
+                      <ErrorTooltip content={this.state.password1InputError} />
 
                       <Input
                         name="password"
                         type="password"
-                        placeholder="Пароль"
+                        placeholder="Пароль*"
                         value={this.state.password}
                         onChange={this.handleChange}
+                        onBlur={() =>
+                          this.setState({
+                            password1InputError:
+                              this.state.password.length >= 1 && this.state.password.length < 6
+                                ? 'Минимальная длинна пароля 6 символов'
+                                : null,
+                          })
+                        }
                       />
                     </FormGroup>
 
                     <FormGroup>
-                      <RegisterErrorTooltipStyle id="password2-error" visible={true} />
-                      <UncontrolledTooltip placement="right" target="password2-error">
-                        Пароли не совпадают
-                      </UncontrolledTooltip>
+                      <ErrorTooltip content={this.state.password2InputError} />
 
                       <Input
                         name="passwordRepeat"
                         type="password"
-                        placeholder="Повторите пароль"
+                        placeholder="Повторите пароль*"
                         value={this.state.passwordRepeat}
                         onChange={this.handleChange}
                       />

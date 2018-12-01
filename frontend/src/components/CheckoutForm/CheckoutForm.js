@@ -14,7 +14,7 @@ import InputField from './InputField';
 
 class CheckoutForm extends Component {
   initialState = {
-    name: this.props.user.username,
+    name: `${this.props.user.name} ${this.props.user.surname}`,
     email: this.props.user.email,
     phone: '',
     submitting: false,
@@ -34,7 +34,7 @@ class CheckoutForm extends Component {
     e.preventDefault();
     this.setState({ submitting: true });
 
-    const { token } = await this.props.stripe.createToken({ name: this.state.name });
+    const { token } = await this.props.stripe.createToken({ name: this.state.email });
 
     this._element.clear();
 
@@ -68,7 +68,7 @@ class CheckoutForm extends Component {
                   <InputField
                     fieldName="name"
                     value={this.state.name}
-                    placeholder={this.props.user.username}
+                    placeholder={this.state.name}
                     type="text"
                     handleChange={this.handleChange}
                   />
