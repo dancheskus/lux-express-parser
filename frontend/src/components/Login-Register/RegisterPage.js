@@ -13,8 +13,8 @@ class LoginRegisterPage extends Component {
     name: '',
     surname: '',
     email: '',
-    password: '',
-    passwordRepeat: '',
+    password1: '',
+    password2: '',
     notification: null,
     nameInputError: null,
     surInputError: null,
@@ -33,48 +33,53 @@ class LoginRegisterPage extends Component {
 
   emailInputOnBlur = () => {
     // eslint-disable-next-line
-    const emailRegex = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+    const emailRegex = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+))|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
 
-    if (this.state.email.length >= 1 && !this.state.email.match(emailRegex))
+    const { email } = this.state;
+
+    if (email && !email.match(emailRegex))
       return this.setState({
         emailInputError: 'Неверный формат email',
       });
 
     axios
-      .post(`${process.env.REACT_APP_BACKEND_URL}/checkEmail`, {
-        email: this.state.email,
-      })
-      .then(({ data }) => {
-        this.setState({
-          emailInputError: data.emailAlreadyRegistered === true ? 'Этот email уже занят' : null,
-        });
-      })
-      .catch(({ response }) => {
-        console.log(response);
-      });
+      .post(`${process.env.REACT_APP_BACKEND_URL}/checkEmail`, { email })
+      .then(({ data }) =>
+        this.setState({ emailInputError: data.emailAlreadyRegistered ? 'Этот email уже занят' : null })
+      )
+      .catch(({ response }) => console.log(response));
   };
 
   password1InputOnBlur = () => {
+    const { password1 } = this.state;
+
     this.setState({
-      password1InputError:
-        this.state.password.length >= 1 && this.state.password.length < 6
-          ? 'Минимальная длинна пароля 6 символов'
-          : null,
+      password1InputError: password1 && password1.length < 6 ? 'Минимальная длинна пароля 6 символов' : null,
+    });
+
+    this.password2InputOnBlur();
+  };
+
+  password2InputOnBlur = () => {
+    const { password1, password2 } = this.state;
+
+    this.setState({
+      password2InputError: password1 && password2 && password1 !== password2 ? 'Пароли не совпадают' : null,
     });
   };
 
   registerPressed = e => {
     e.preventDefault();
 
-    const { name, surname, email, password, passwordRepeat } = this.state;
+    const { name, surname, email, password1, password2 } = this.state;
 
-    if (!(name && surname && email && password && passwordRepeat))
+    if (!(name && surname && email && password1 && password2))
       return this.setState({ notification: { message: 'Заполните все поля', type: 'danger' } });
 
-    if (password !== passwordRepeat) return this.setState({ password2InputError: 'Пароли не совпадают' });
+    if (password1 !== password2) return this.setState({ password2InputError: 'Пароли не совпадают' });
 
     axios
-      .post(`${process.env.REACT_APP_BACKEND_URL}/register`, { name, surname, email, password })
+      .post(`${process.env.REACT_APP_BACKEND_URL}/register`, { name, surname, email, password: password1 })
       .then(() => {
         this.setState({
           ...this.initialState,
@@ -92,14 +97,7 @@ class LoginRegisterPage extends Component {
           },
         });
       })
-      .catch(({ response }) => {
-        this.setState({
-          notification: {
-            message: response.data.message,
-            type: 'danger',
-          },
-        });
-      });
+      .catch(({ response: { data: { message } } }) => this.setState({ notification: { message, type: 'danger' } }));
   };
 
   render() {
@@ -128,7 +126,7 @@ class LoginRegisterPage extends Component {
                     <FormGroup>
                       <ErrorTooltip content={this.state.nameInputError} />
 
-                      <Input name="name" placeholder="Имя*" value={this.state.name} onChange={this.handleChange} />
+                      <Input name="name" placeholder="Имя" value={this.state.name} onChange={this.handleChange} />
                     </FormGroup>
 
                     <FormGroup>
@@ -136,7 +134,7 @@ class LoginRegisterPage extends Component {
 
                       <Input
                         name="surname"
-                        placeholder="Фамилия*"
+                        placeholder="Фамилия"
                         value={this.state.surname}
                         onChange={this.handleChange}
                       />
@@ -148,7 +146,7 @@ class LoginRegisterPage extends Component {
                       <Input
                         name="email"
                         type="email"
-                        placeholder="Email*"
+                        placeholder="Email"
                         value={this.state.email}
                         onChange={this.handleChange}
                         onBlur={this.emailInputOnBlur}
@@ -159,10 +157,10 @@ class LoginRegisterPage extends Component {
                       <ErrorTooltip content={this.state.password1InputError} />
 
                       <Input
-                        name="password"
+                        name="password1"
                         type="password"
-                        placeholder="Пароль*"
-                        value={this.state.password}
+                        placeholder="Пароль"
+                        value={this.state.password1}
                         onChange={this.handleChange}
                         onBlur={this.password1InputOnBlur}
                       />
@@ -172,21 +170,12 @@ class LoginRegisterPage extends Component {
                       <ErrorTooltip content={this.state.password2InputError} />
 
                       <Input
-                        name="passwordRepeat"
+                        name="password2"
                         type="password"
-                        placeholder="Повторите пароль*"
-                        value={this.state.passwordRepeat}
+                        placeholder="Повторите пароль"
+                        value={this.state.password2}
                         onChange={this.handleChange}
-                        onBlur={() =>
-                          this.setState({
-                            password2InputError:
-                              this.state.password.length >= 1 &&
-                              this.state.passwordRepeat.length >= 1 &&
-                              this.state.password !== this.state.passwordRepeat
-                                ? 'Пароли не совпадают'
-                                : null,
-                          })
-                        }
+                        onBlur={this.password2InputOnBlur}
                       />
                     </FormGroup>
                   </div>
@@ -208,9 +197,7 @@ class LoginRegisterPage extends Component {
   }
 }
 
-const mapStateToProps = state => ({
-  user: state.user,
-});
+const mapStateToProps = state => ({ user: state.user });
 
 const mapDispatchToProps = dispatch => ({
   VH100on: () => dispatch(VH100on()),

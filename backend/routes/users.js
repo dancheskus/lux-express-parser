@@ -8,16 +8,16 @@ const isVerified = require('../helpers/userVerification');
 router.post('/register', async (req, res) => {
   try {
     const user = await User.create(req.body);
-    res.json({ type: 'alert', message: user.email + ' успешно зарегистрирован', user });
+    res.json({ message: user.email + ' успешно зарегистрирован', user });
   } catch (error) {
     if (error.errors) {
-      if (error.errors.email) return res.status(400).json({ type: 'tooltip', message: 'Неверный формат email' });
-      if (error.errors.password)
-        return res.status(400).json({ type: 'tooltip', message: 'Минимальная длинна пароля 6 символов' });
+      console.log(error.errors.password);
+      if (error.errors.email) return res.status(400).json({ message: 'Неверный формат email' });
+      if (error.errors.password) return res.status(400).json({ message: 'Минимальная длинна пароля 6 символов' });
     }
 
     if (error.name === 'MongoError' && error.code === 11000)
-      return res.status(400).json({ type: 'alert', message: 'Пользователь с таким email уже зарегестрирован' });
+      return res.status(400).json({ message: 'Пользователь с таким email уже зарегестрирован' });
 
     res.status(400).json({ error });
   }
