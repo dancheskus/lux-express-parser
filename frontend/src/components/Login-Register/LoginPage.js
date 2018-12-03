@@ -18,25 +18,22 @@ class LoginRegisterPage extends Component {
     notification: null,
   };
 
-  componentDidMount() {
-    this.props.VH100on();
-  }
+  componentDidMount = () => this.props.VH100on();
 
-  componentWillUnmount() {
-    this.props.VH100off();
-  }
+  componentWillUnmount = () => this.props.VH100off();
 
   handleChange = e => this.setState({ [e.target.name]: e.target.value });
 
   loginPressed = async e => {
     e.preventDefault();
-    if (!this.state.email || !this.state.password)
-      return this.setState({ notification: { message: 'Заполните все поля', type: 'danger' } });
+    const { email, password } = this.state;
+
+    if (!(email && password)) return this.setState({ notification: { message: 'Заполните все поля', type: 'danger' } });
 
     axios
       .post(`${process.env.REACT_APP_BACKEND_URL}/login`, {
-        email: this.state.email,
-        password: this.state.password,
+        email,
+        password,
       })
       .then(({ data: { user, token } }) => {
         this.props.addUser(user);
@@ -119,7 +116,6 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  dispatch,
   addUser: user => dispatch(addUser(user)),
   VH100on: () => dispatch(VH100on()),
   VH100off: () => dispatch(VH100off()),

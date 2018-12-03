@@ -1,16 +1,12 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import axios from 'axios';
-
-import { VH100on, VH100off } from '../../actions/styleActions';
-
 import { NavLink, withRouter } from 'react-router-dom';
-
 import { FormGroup, Input, Col, Container, Row } from 'reactstrap';
 
-import { Background, StyledForm, StyledAlert } from './style';
-
+import { VH100on, VH100off } from '../../actions/styleActions';
 import ErrorTooltip from './ErrorTooltip';
+import { Background, StyledForm, StyledAlert } from './style';
 
 class LoginRegisterPage extends Component {
   initialState = {
@@ -29,39 +25,48 @@ class LoginRegisterPage extends Component {
 
   state = this.initialState;
 
-  componentDidMount() {
-    this.props.VH100on();
-  }
+  componentDidMount = () => this.props.VH100on();
 
-  componentWillUnmount() {
-    this.props.VH100off();
-  }
+  componentWillUnmount = () => this.props.VH100off();
 
   handleChange = e => this.setState({ [e.target.name]: e.target.value });
+
+  emailInputOnBlur = () => {
+    // eslint-disable-next-line
+    const emailRegex = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+
+    if (this.state.email.length >= 1 && !this.state.email.match(emailRegex))
+      return this.setState({
+        emailInputError: 'Неверный формат email',
+      });
+
+    axios
+      .post(`${process.env.REACT_APP_BACKEND_URL}/checkEmail`, {
+        email: this.state.email,
+      })
+      .then(({ data }) => {
+        this.setState({
+          emailInputError: data.emailAlreadyRegistered === true ? 'Этот email уже занят' : null,
+        });
+      })
+      .catch(({ response }) => {
+        console.log(response);
+      });
+  };
 
   registerPressed = e => {
     e.preventDefault();
 
-    if (
-      !this.state.name ||
-      !this.state.surname ||
-      !this.state.email ||
-      !this.state.password ||
-      !this.state.passwordRepeat
-    )
+    const { name, surname, email, password, passwordRepeat } = this.state;
+
+    if (!(name && surname && email && password && passwordRepeat))
       return this.setState({ notification: { message: 'Заполните все поля', type: 'danger' } });
 
-    if (this.state.password !== this.state.passwordRepeat)
-      return this.setState({ password2InputError: 'Пароли не совпадают' });
+    if (password !== passwordRepeat) return this.setState({ password2InputError: 'Пароли не совпадают' });
 
     axios
-      .post(`${process.env.REACT_APP_BACKEND_URL}/register`, {
-        name: this.state.name,
-        surname: this.state.surname,
-        email: this.state.email,
-        password: this.state.password,
-      })
-      .then(({ data }) => {
+      .post(`${process.env.REACT_APP_BACKEND_URL}/register`, { name, surname, email, password })
+      .then(() => {
         this.setState({
           ...this.initialState,
           notification: {
@@ -89,9 +94,6 @@ class LoginRegisterPage extends Component {
   };
 
   render() {
-    // eslint-disable-next-line
-    const emailRegex = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
-
     return (
       <Background className="d-flex flex-column flex-grow-1">
         <Container>
@@ -140,25 +142,7 @@ class LoginRegisterPage extends Component {
                         placeholder="Email*"
                         value={this.state.email}
                         onChange={this.handleChange}
-                        onBlur={() => {
-                          if (this.state.email.length >= 1 && !this.state.email.match(emailRegex))
-                            return this.setState({
-                              emailInputError: 'Неверный формат email',
-                            });
-
-                          axios
-                            .post(`${process.env.REACT_APP_BACKEND_URL}/checkEmail`, {
-                              email: this.state.email,
-                            })
-                            .then(({ data }) => {
-                              this.setState({
-                                emailInputError: data.emailAlreadyRegistered === true ? 'Этот email уже занят' : null,
-                              });
-                            })
-                            .catch(({ response }) => {
-                              console.log(response);
-                            });
-                        }}
+                        onBlur={this.emailInputOnBlur}
                       />
                     </FormGroup>
 
@@ -227,7 +211,6 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  dispatch,
   VH100on: () => dispatch(VH100on()),
   VH100off: () => dispatch(VH100off()),
 });
