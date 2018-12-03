@@ -54,6 +54,15 @@ class LoginRegisterPage extends Component {
       });
   };
 
+  password1InputOnBlur = () => {
+    this.setState({
+      password1InputError:
+        this.state.password.length >= 1 && this.state.password.length < 6
+          ? 'Минимальная длинна пароля 6 символов'
+          : null,
+    });
+  };
+
   registerPressed = e => {
     e.preventDefault();
 
@@ -155,14 +164,7 @@ class LoginRegisterPage extends Component {
                         placeholder="Пароль*"
                         value={this.state.password}
                         onChange={this.handleChange}
-                        onBlur={() =>
-                          this.setState({
-                            password1InputError:
-                              this.state.password.length >= 1 && this.state.password.length < 6
-                                ? 'Минимальная длинна пароля 6 символов'
-                                : null,
-                          })
-                        }
+                        onBlur={this.password1InputOnBlur}
                       />
                     </FormGroup>
 

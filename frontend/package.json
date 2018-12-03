@@ -17,10 +17,10 @@
     "react-select": "^2.1.1",
     "react-spinners": "^0.4.5",
     "react-stripe-elements": "^2.0.1",
+    "react-uid": "^2.2.0",
     "reactstrap": "^6.5.0",
     "redux": "^4.0.0",
-    "styled-components": "^4.1.1",
-    "uuid": "^3.3.2"
+    "styled-components": "^4.1.1"
   },
   "scripts": {
     "start": "react-scripts start",

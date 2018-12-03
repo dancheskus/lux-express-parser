@@ -66,6 +66,7 @@ export const StyledForm = styled(Form)`
       border-bottom: 1px solid #ced4da;
       box-shadow: none;
       border-radius: 0;
+      background-clip: content-box;
     }
   }
 

@@ -1,16 +1,19 @@
 import React, { Fragment } from 'react';
 import { RegisterErrorTooltipStyle } from './style';
 import { UncontrolledTooltip } from 'reactstrap';
-import uuidv4 from 'uuid/v4';
+import { UID } from 'react-uid';
 
 export default props => {
-  const uuid = 'id-' + uuidv4();
   return (
-    <Fragment>
-      <RegisterErrorTooltipStyle id={uuid} visible={!!props.content} />
-      <UncontrolledTooltip placement="right" target={uuid}>
-        {props.content}
-      </UncontrolledTooltip>
-    </Fragment>
+    <UID name={id => `unique-${id}`}>
+      {id => (
+        <Fragment>
+          <RegisterErrorTooltipStyle id={id} visible={!!props.content} />
+          <UncontrolledTooltip placement="right" target={id}>
+            {props.content}
+          </UncontrolledTooltip>
+        </Fragment>
+      )}
+    </UID>
   );
 };
