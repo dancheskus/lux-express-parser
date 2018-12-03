@@ -1,22 +1,15 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import axios from 'axios';
+import { NavLink, withRouter } from 'react-router-dom';
+import { FormGroup, Input, Col, Container, Row } from 'reactstrap';
 
 import { addUser } from '../../actions/userActions';
 import { VH100on, VH100off } from '../../actions/styleActions';
-
-import { NavLink, withRouter } from 'react-router-dom';
-
-import { FormGroup, Input, Col, Container, Row } from 'reactstrap';
-
 import { Background, StyledForm, StyledAlert } from './style';
 
 class LoginRegisterPage extends Component {
-  state = {
-    email: '',
-    password: '',
-    notification: null,
-  };
+  state = { email: '', password: '', notification: null };
 
   componentDidMount = () => this.props.VH100on();
 
@@ -24,7 +17,7 @@ class LoginRegisterPage extends Component {
 
   handleChange = e => this.setState({ [e.target.name]: e.target.value });
 
-  loginPressed = async e => {
+  loginPressed = e => {
     e.preventDefault();
     const { email, password } = this.state;
 
@@ -40,14 +33,7 @@ class LoginRegisterPage extends Component {
         localStorage.setItem('token', token);
         this.props.history.push('/');
       })
-      .catch(({ response }) => {
-        this.setState({
-          notification: {
-            message: response.data.message,
-            type: 'danger',
-          },
-        });
-      });
+      .catch(({ response: { data: { message } } }) => this.setState({ notification: { message, type: 'danger' } }));
   };
 
   render() {
@@ -111,9 +97,7 @@ class LoginRegisterPage extends Component {
   }
 }
 
-const mapStateToProps = state => ({
-  user: state.user,
-});
+const mapStateToProps = state => ({ user: state.user });
 
 const mapDispatchToProps = dispatch => ({
   addUser: user => dispatch(addUser(user)),
